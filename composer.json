@@ -1,0 +1,15 @@
+{
+    "require": {
+        "predis/predis": "*",
+        "aronduby/dump": "*",
+        "slim/slim": "*",
+        "illuminate/database": "*",
+        "dogancelik/slim-json": "dev-master",
+        "passwordlib/passwordlib": "dev-master"
+    },
+    "autoload":{
+		"psr-0":{
+			"": "src/"
+		}
+	}
+}
