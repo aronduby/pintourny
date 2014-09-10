@@ -13,10 +13,10 @@ function FlareService($timeout) {
   this.counter = 0;
   this.levels = ['error', 'warn', 'info', 'success'];
   this.levelClasses = {};
-  this.levelClasses.error = ['alert alert-danger alert-dismissable'];
-  this.levelClasses.warn = ['alert alert-warning alert-dismissable'];
-  this.levelClasses.success = ['alert alert-success alert-dismissable'];
-  this.levelClasses.info = ['alert alert-info alert-dismissable'];
+  this.levelClasses.error = ['alert alert-danger alert-dismissable alert-dark'];
+  this.levelClasses.warn = ['alert alert-warning alert-dismissable alert-dark'];
+  this.levelClasses.success = ['alert alert-success alert-dismissable alert-dark'];
+  this.levelClasses.info = ['alert alert-info alert-dismissable alert-dark'];
   this.init();
 }
 

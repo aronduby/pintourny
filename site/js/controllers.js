@@ -22,11 +22,28 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.listTracker.addPromise(tournaments_promise);
 
 	$scope.current_index = 0;
-	$scope.highlight_nav = 0;
 
-	$scope.onAfterChange = function(){
-		console.log('hey hey hey');
-	}
+	$scope.breakpoints = [
+	  {
+	    breakpoint: 1400,
+	    settings: {
+	      slidesToShow: 3,
+	      slidesToScroll: 3
+	    }
+	  }, {
+	  	breakpoint: 1150,
+	  	settings: {
+	  		slidesToShow: 2,
+	  		slidesToScroll: 2
+	  	}
+	  }, {
+	    breakpoint: 900,
+	    settings: {
+	      slidesToShow: 1,
+	      slidesToScroll: 1
+	    }
+	  }
+	];
 
 	socket
 		.on('score.new', function(data){

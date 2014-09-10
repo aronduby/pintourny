@@ -272,4 +272,16 @@ angular.module('myApp', [
 		$location.search(locationSearch);
 	});
 
+
+	// toggle main-menu when click is triggered
+	$(document).on('click', '#main-menu a', function(){
+		PixelAdmin.plugins.main_menu.toggle();
+	});
+
+	$('#main-navbar').on('click', 'a:not(.dropdown-toggle)', function(){
+		$('.in,.open').removeClass('in open');
+		// $(this).closest(".dropdown-menu").prev().dropdown("toggle");
+	});
+
+
 }]);

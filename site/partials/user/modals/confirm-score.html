@@ -1,43 +1,44 @@
-<div class="modal-container">
+<div id="confirm-score" class="modal-container">
 	<header class="modal-header">
 		<h4 class="modal-title">Please Confirm Your Score</h4>
 	</header>
 	<section class="modal-body">
-		
-		<section class="panel panel-default">
-			<header class="panel-heading">Your Name:</header>
-			<div class="panel-body">{{score.player.first_name}} {{score.player.last_name}}</div>
-		</section>
 
-		<section class="panel panel-default">
-			<header class="panel-heading">Machine You Played:</header>
-			<div class="panel-body">{{score.machine.title}}</div>
-		</section>
-
-		<section class="panel panel-default">
-			<header class="panel-heading">Your Score:</header>
-			<div class="panel-body">{{score.score | number:0}}</div>
-		</section>
+		<table class="table">
+			<tr>
+				<th>Your Name</th>
+				<td>{{score.player.first_name}} {{score.player.last_name}}</td>
+			</tr>
+			<tr>
+				<th>Machine You Played</th>
+				<td>{{score.machine.title}}</td>
+			</tr>
+			<tr>
+				<th>Your Score</th>
+				<td>{{score.score | number:0}}</td>
+			</tr>
+		</table>
 
 	</section>
 	<footer class="modal-footer">
-		<center class="btn-group btn-group-justified">
-			<div class="btn-group btn-group-lg">
-				<button class="btn btn-lg btn-success" ng-click="confirm()">
-					<span
-						ng-show="saving.active()" 
-						us-spinner="{
-							color:'#fff',
-							lines: 7,
-							length: 3,
-							width: 4,
-							radius: 5
-						}"
-					>&nbsp;</span>
-					<span ng-show="!saving.active()">Everything's Right</span>
-				</button>
-			</div>
-			<div class="btn-group btn-group-lg"><button class="btn btn-lg btn-default" ng-click="cancel()">Something's Wrong</button></div>
-		</center>
+
+		<button ng-click="confirm()" class="btn btn-lg btn-success btn-flat btn-labeled">
+			<span class="btn-label icon fa fa-check"></span>
+			<span
+				ng-show="saving.active()" 
+				us-spinner="{
+					color:'#fff',
+					lines: 7,
+					length: 3,
+					width: 4,
+					radius: 5
+				}"
+			>&nbsp;</span>
+			<span ng-show="!saving.active()">Looks Good</span>
+		</button>
+		<button type="button" class="btn btn-lg btn-danger btn-flat btn-labeled" ng-click="cancel()">
+			<span class="btn-label icon fa fa-ban"></span>Something's Wrong
+		</button>
+
 	</footer>
 </div>

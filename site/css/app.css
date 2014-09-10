@@ -6,6 +6,10 @@ body {
     background-color: #fff;
 }
 
+.theme-frost #main-navbar .navbar-brand div{
+	background:none;
+}
+
 .btn{
 	border-radius:0;
 	border:none;
@@ -37,7 +41,24 @@ body {
 
 #main-menu{
 	top:46px;
+	/* max-width: 240px; */
 }
+
+#socket_status{	
+    top: 61px;
+    position: relative;
+    margin: -18px 0 18px 0;
+}
+
+#flare-holder{
+	position:fixed;
+	bottom:2px;
+	right:2px;
+}
+	#flare-holder .alert{
+		border:0;
+		margin-bottom:2px;
+	}
 
 /* 
  *	Tournament Page 
@@ -93,6 +114,12 @@ body {
 		border:1px solid #dcdfe0;
 		/* min-width:320px; */
 	}
+		@media (max-width: 900px){
+			#tournament .machine,
+			#tournament .totals{
+				margin-right:0;
+			}
+		}
 
 	#tournament .machine header{
 		position:relative;
@@ -184,7 +211,9 @@ body {
 		padding: 2em 4em;
 		font-size: 1.3em;
 		font-weight: bold;
-	}
+	
+		text-align: center;
+}
 	
 	/* mostly faking table since we need li for cutoff */
 	#tournament .totals-data{
@@ -283,7 +312,10 @@ body {
 }
 	.signin-info .logo img{
 		width:80%;
-		margin-bottom:20px;
+		margin-bottom:20px;	
+		max-width: 180px;
+		display: block;
+		margin: auto;
 	}
 	.signin-with{
 		text-align:center;
@@ -351,3 +383,65 @@ body {
 		.admin .table td .btn{ visibility: hidden; }
 		.admin .table tr:hover td .btn{ visibility: visible; }
 	}
+	
+	
+/*
+ *	Change Mobile Menu Halfsie
+*/
+@media  (max-width:767px) {
+	#main-menu-bg {
+		width: 0;
+	}	
+	#main-menu {
+		overflow:hidden;
+		width:0;
+	}
+
+	.mme #main-menu, 
+	.mme #main-menu-bg{
+		width:80%;
+	}
+	
+	#main-wrapper{
+		padding-left:0;
+	}
+	
+	.slick-prev{
+		left:5px;
+	}
+}
+
+@media (min-width:768px){
+	#main-navbar #main-menu-toggle{
+		display:none;
+	}
+	
+	#main-navbar .navbar-header{
+		padding-left:0 !important;
+	}
+}
+
+@media (min-width:480px){
+	.mme #main-menu-bg,
+	.mme #main-menu{
+		width:240px !important;
+	}
+}
+
+
+#confirm-score section td,
+#confirm-score section th{
+	font-size:16px;
+	padding:15px 5px;
+}
+	#confirm-score table tr:first-child th,
+	#confirm-score table tr:first-child td{
+		border:none;
+	}
+
+#confirm-score footer button{
+	display:block;
+	margin:5px 0;
+	width:100%;
+	font-weight:600;
+}
