@@ -1,3 +1,64 @@
+<nav id="main-menu" role="navigation" ng-controller="NavCtrl">
+	<div id="main-menu-inner">
+		<div id="menu-content-demo" class="menu-content top">
+			<div access-level="accessLevels.user">
+				<div class="text-bg">
+					<span 
+						class="label user-type"
+						ng-class="{
+							'label-info': user.role.title == userRoles.user.title,
+							'label-success': user.role.title == userRoles.admin.title
+						}"
+					>{{user.role.title}}</span>
+					<span class="text-slim">Hey,</span> <span class="text-semibold">{{user.username}}</span>
+				</div>
+
+				<p>Let's play some pinball!</p>
+			</div>
+			<div access-level="accessLevels.anon">
+				<div class="text-bg">
+					<span class="text-slim">Nothing to see here folks..</span>
+				</div>
+				<p>Just go about your business of logging in</p>
+			</div>
+		</div>
+		<ul class="navigation">
+			<!-- Users -->
+			<li 
+				class="user-score"
+				access-level="accessLevels.user"
+				active-nav
+			><a ui-sref="user.score">Score</a></li>
+
+			<!-- Admin -->
+			<li 
+				access-level="accessLevels.admin"
+				active-nav
+			><a ui-sref="admin.tournaments">Tournaments</a></li>
+			<li 
+				access-level="accessLevels.admin"
+				active-nav
+			><a ui-sref="admin.machines">Machines</a></li>
+			<li 
+				access-level="accessLevels.admin"
+				active-nav
+			><a ui-sref="admin.players">Players</a></li>
+			<li 
+				access-level="accessLevels.admin"
+				active-nav
+			><a ui-sref="admin.scores">Scores</a></li>
+			<li 
+				access-level="accessLevels.admin"
+				active-nav
+			><a ui-sref="admin.users">Users</a></li>
+		</ul> <!-- / .navigation -->
+		<div class="menu-content">
+			<a access-level="accessLevels.user" href="#" ng-click="logout()" class="btn btn-primary btn-block btn-outline dark">Logout</a>
+			<a access-level="accessLevels.anon" ui-sref="anon.login" class="btn btn-primary btn-block btn-outline dark">Login</a>
+		</div>
+	</div> <!-- / #main-menu-inner -->
+</nav> <!-- / #main-menu -->
+
 <article id="content-wrapper" class="login theme-frost page-signin">
 
 	<header class="page-header">			

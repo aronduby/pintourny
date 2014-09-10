@@ -327,6 +327,7 @@ body {
 	padding-left:20px !important;
 	padding-top:20px !important;
 	color:#b5b6b6;
+	white-space: normal !important;
 }
 	#menu-content-demo > div{
 		width:auto;
