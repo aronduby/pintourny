@@ -54,6 +54,7 @@ body {
 	position:fixed;
 	bottom:2px;
 	right:2px;
+	z-index: 2000;
 }
 	#flare-holder .alert{
 		border:0;
