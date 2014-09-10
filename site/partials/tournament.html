@@ -15,7 +15,7 @@
       					<img ng-src="img/machines/{{machine.image}}" />
       				</div>
       			</div>
-      			<h1><a href="" ng-click="jumpToMachine({tournament_id: tournament.id})" class="tournament-title">{{tournament.title}}</a></h1>
+      			<h1><a href="" ng-click="jumpToMachine({tournament_id: tournament.id}, 0)" class="tournament-title">{{tournament.title}}</a></h1>
 			</header>
 			<ul class="navigation" ng-hide="listTracker.active()">
 				<li 
@@ -44,7 +44,7 @@
 			<header class="page-header">			
 				<div class="row">
 					<!-- Page header, center on small screens -->
-					<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>{{current_tournament.title}}</strong> {{current_tournament.description}}</h1>
+					<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>{{current_tournament.title}}</strong> {{current_index != current_tournament.machines.length ? current_tournament.machines[current_index].title : 'Totals'}}</h1>
 				</div>
 			</header>
 

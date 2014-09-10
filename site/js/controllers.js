@@ -128,6 +128,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 			$scope.current_tournament.totals = {};
 			$scope.current_machine = $scope.current_tournament.machines[0];
 			$scope.updateTotals();
+			$scope.current_index = 0;
 		});
 
 		$scope.tournamentTracker.addPromise(promise);
