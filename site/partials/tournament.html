@@ -1,0 +1,137 @@
+<nav id="main-menu" role="navigation">
+	<div id="main-menu-inner">
+		<div ng-show="listTracker.active()" id="menu-content-demo" class="menu-content top">
+			<div>
+				<div class="loading" ng-show="listTracker.active()" us-spinner="{color:'#7f8796'}"></div>
+			</div>
+		</div>
+		<section class="tournament" ng-repeat="tournament in tournaments">
+			<header>
+				<div class="img-bg">
+					<div
+						ng-repeat="machine in tournament.machines" 
+      					ng-if="machine.image.length > 0"
+      				>
+      					<img ng-src="img/machines/{{machine.image}}" />
+      				</div>
+      			</div>
+      			<h1><a href="" ng-click="jumpToMachine({tournament_id: tournament.id})" class="tournament-title">{{tournament.title}}</a></h1>
+			</header>
+			<ul class="navigation" ng-hide="listTracker.active()">
+				<li 
+					ng-repeat="machine in tournament.machines" 
+					ng-class="{active: current_tournament.id == tournament.id && $index == highlight_nav}"
+				>
+					<a href="" ng-click="jumpToMachine(machine, $index)">{{machine.title}}</a>
+				</li>
+				<li ng-if="tournament.machines.length" ng-class="{current: current_tournament.id == tournament.id && highlight_nav == tournament.machines.length}">
+					<a href="" ng-click="jumpToMachine({id: 'total', title:'Totals', tournament_id: tournament.id}, tournament.machines.length)">Totals ({{highlight_nav}}, {{tournament.machines.length}})</a>
+				</li>
+				<li ng-if="tournament.machines.length == 0" class="repeat-empty text-muted">No machines add to the tournament yet</li>
+			</ul>
+		</section>
+	</div> <!-- / #main-menu-inner -->
+</nav> <!-- / #main-menu -->
+
+<div id="content-wrapper">
+
+
+	<div id="tournament" ng-hide="listTracker.active() && tournamentTracker.active()">
+
+		<div class="loading" ng-show="tournamentTracker.active()" us-spinner="{color:'#555'}"></div>
+		<article ng-if="current_tournament && !tournamentTracker.active()">
+
+			<header class="page-header">			
+				<div class="row">
+					<!-- Page header, center on small screens -->
+					<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>{{current_tournament.title}}</strong> {{current_machine.title}}</h1>
+				</div>
+			</header>
+
+			<select ng-model="current_index" ng-options="i for i in [0,1,2,3,4,5]"></select>
+			<ul>
+				<li><a ng-click="current_index=0">0</a></li>				
+				<li><a ng-click="current_index=1">1</a></li>
+				<li><a ng-click="current_index=2">2</a></li>
+				<li><a ng-click="current_index=3">3</a></li>
+				<li><a ng-click="current_index=4">4</a></li>
+				<li><a ng-click="current_index=5">5</a></li>			
+			</ul>
+			<slick 
+				class="machines"
+
+				infinite="false"
+				slides-to-show="4" 
+				slides-to-scroll="1"
+				current-index = "current_index"
+				onAfterChange = "onAfterChange"
+			>
+
+
+				<div ng-repeat="machine in current_tournament.machines" class="machine panel panel-default" data-machine-id="{{machine.id}}">
+					<header>
+						<div class="bg-cover" ng-show="machine.image.length">
+							<img ng-src="img/machines/{{machine.image}}" />
+						</div>
+						<span class="abbv">{{machine.abbv}}</span>
+						<h2>{{machine.title}}</h2>
+					</header>
+					<table class="machine-data table table-striped">
+						<thead>
+							<tr>
+								<th class="pts">Pts.</th>
+								<th class="player">Player</th>
+								<th class="score">Score</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="score in machine.scores | orderBy:'score':true track by score.player_id" class="repeat-animation hide-fade">
+								<td class="pts">{{points[$index]}}</td>
+								<td class="player">{{score.player.first_name}} {{score.player.last_name}}</td>
+								<td class="score">{{score.score | number:0}}</td>
+							</tr>
+							<tr class="repeat-empty text-muted" ng-if="machine.scores.length == 0">
+								<td colspan="3">Quick! Get a game in, you're guarnteed 100 points right now!</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div ng-if="current_tournament.machines.length" class="machine totals panel panel-default" data-machine-id="totals">
+					<header>
+						<div class="bg-cover">
+							<img src="img/damage2.jpg" />
+						</div>
+						<span class="abbv">=</span>
+						<h2>Totals</h2>
+					</header>
+					<ul class="machine-data totals-data table table-striped">
+						<li class="thead">
+							<span class="rank">Rank</span>
+							<span class="player">Player</span>
+							<span class="score">Points</span>
+						</li>
+						<li 
+							ng-repeat="score in current_tournament.totals | orderObjectBy:'points':true track by score.player_id"
+							ng-class="{cutoff: $index == current_tournament.cutoff}"
+							class="repeat-animation hide-fade"
+						>
+							<span class="rank">{{$index + 1}}</span>
+							<span class="player">{{score.first_name}} {{score.last_name}}</span>
+							<span class="score">{{score.points | number:0}}</span>
+						</li>
+						<li class="repeat-empty text-muted" ng-if="current_tournament.totals.length == 0">
+							no scores yet
+						</li>
+					</ul>
+				</div>
+
+
+
+
+			</slick>
+
+		</article>
+	</div>
+
+</div>

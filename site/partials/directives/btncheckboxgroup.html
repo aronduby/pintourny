@@ -1,0 +1,16 @@
+<div 
+	class="btn-group checkbox-btn-group" 
+	ng-class="{
+		'btn-group-vertical': vertical,
+		'btn-group-justified': justified
+	}"
+>
+	<button type="button" class="btn"
+		ng-repeat="a in allowed"
+		ng-click="addRemove(a); $event.stopPropagation();"
+		ng-class="{
+			'btn-default': abp.indexOf(a[id])==-1,
+			'btn-info': abp.indexOf(a[id])!==-1 
+		}"
+	><span ng-show="abp.indexOf(a[id])!==-1" class="glyphicon glyphicon-ok-circle"> </span>{{a[title]}}</button>
+</div>

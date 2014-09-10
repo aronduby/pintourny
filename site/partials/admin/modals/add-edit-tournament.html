@@ -1,0 +1,49 @@
+<div class="modal-container">
+	<header class="modal-header">
+		<button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+		<h4 class="modal-title">{{title}}</h4>
+	</header>
+
+	<form name="add-edit" class="form" role="form" ng-submit="save()">
+
+		<section class="modal-body">
+
+			<div class="form-group">
+				<label for="title">Title</label>
+				<input type="text" class="form-control" id="title" placeholder="Tournament Title" required ng-model="tournament.title">
+			</div>
+
+			<div class="form-group">
+				<label for="cutoff">Qualified Cutoff</label>
+				<input type="number" class="form-control" id="cutoff" placeholder="Cutoff" required ng-model="tournament.cutoff" min="1">
+				<p class="help-block">How many players will qualify?</p>
+			</div>
+
+			<div class="form-group">
+				<label for="description">Description</label>
+				<textarea class="form-control" id="description" placeholder="Description" ng-model="tournament.description"></textarea>
+				<p class="help-block">(optional)</p>
+			</div>
+
+		</section>
+
+		<footer class="modal-footer">
+			<button type="submit" class="btn btn-lg btn-success btn-flat btn-labeled">
+				<span class="btn-label icon fa fa-save"></span>
+				<span
+					ng-show="saving.active()" 
+					us-spinner="{
+						color:'#fff',
+						lines: 7,
+						length: 3,
+						width: 4,
+						radius: 5
+					}"
+				>&nbsp;</span>
+				<span ng-show="!saving.active()">Save</span>
+			</button>
+			<button type="button" class="btn btn-lg btn-default btn-flat btn-labeled" ng-click="cancel()"><span class="btn-label icon fa fa-ban"></span>Cancel</button>
+		</footer>
+
+	</form>
+</div>

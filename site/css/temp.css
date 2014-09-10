@@ -1,0 +1,61 @@
+body{
+	margin:0;
+	padding:0;
+	background:#000;
+	font-family:impact;
+	font-size:30pt;
+	line-height:2em;
+	color:#6FCFF9;
+	text-align:center;
+}
+
+article{
+	width:100%;
+	max-width:749px;
+	margin:2em auto;
+}
+
+#bride{
+	width:100%;
+}
+
+h1{
+	font-size:2em;
+	font-weight:normal;
+}
+
+ul{
+	list-style:none;
+	font-size:1.5em;
+	color:#fff;
+	margin:0;
+	padding:0;
+}
+	ul li{
+		line-height:1em;
+		margin:10px 0;
+	}
+	ul li:nth-child(2){
+		font-size:.8em;
+		opacity:.8;
+	}
+	ul li:nth-child(3){
+		font-size:.6em;
+		opacity:.6;
+	}
+	ul li:nth-child(4){
+		font-size:.4em;
+		opacity:.4;	
+	}
+	ul li:nth-child(5){
+		font-size:.25em;
+		opacity:.2;	
+	}
+	
+	
+p a{
+	color:#6FCFF9;
+}
+p a:hover{
+	color:#f00;
+}

@@ -1,0 +1,96 @@
+<article class="admin tournaments">
+
+	<div class="loading" ng-show="tournamentTracker.active()" us-spinner="{color:'#555'}"></div>
+	<div ng-hide="tournamentTracker.active()">
+
+		<header class="page-header">			
+			<div class="row">
+				<!-- Page header, center on small screens -->
+				<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>Admin</strong> Tournaments</h1>
+
+				<div class="col-xs-12 col-sm-8">
+					<div class="row">
+						<hr class="visible-xs no-grid-gutter-h">
+						<!-- "Create project" button, width=auto on desktops -->
+						<div class="pull-right col-xs-12 col-sm-auto">
+							<a ng-click="add()" class="btn btn-primary btn-labeled btn-flat" style="width: 100%;">
+								<span class="btn-label icon fa fa-plus"></span>New Tournament
+							</a>
+						</div>
+
+						<!-- Margin -->
+						<div class="visible-xs clearfix form-group-margin"></div>
+
+						<!-- Search field -->
+						<form action="" class="pull-right col-xs-12 col-sm-6">
+							<div class="input-group no-margin">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input type="search" placeholder="Search..." class="form-control no-padding-hr" ng-model="tournamentSearch">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="tournament-panel tournaments panel panel-default table-warning">
+
+			<table ng-show="!tournamentTracker.active() && tournaments.length" class="table table-striped table-hover" >
+				<thead>
+					<tr>
+						<th class="sortable title" ng-click="predicate='title';reverse=!reverse">Title&nbsp; 
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='title',
+									'fa-sort-asc': predicate=='title' && !reverse, 
+									'fa-sort-desc': predicate=='title' && reverse
+								}" 								
+							></span>
+						</th>
+						<th class="sortable numeric cutoff" ng-click="predicate='cutoff';reverse=!reverse">Cutoff&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='cutoff',
+									'fa-sort-asc': predicate=='cutoff' && !reverse, 
+									'fa-sort-desc': predicate=='cutoff' && reverse
+								}"								
+							></span>
+						</th>
+						<th class="sortable description" ng-click="predicate='description';reverse=!reverse">Description&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='description',
+									'fa-sort-asc': predicate=='description' && !reverse, 
+									'fa-sort-desc': predicate=='description' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="buttons"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="tournament in tournaments | filter:tournamentSearch | orderBy:predicate:reverse" ng-dblclick="edit(tournament)">
+						<td data-title="title">{{tournament.title}}</td>
+						<td data-title="cutoff">{{tournament.cutoff}}</td>
+						<td data-title="description">{{tournament.description}}</td>
+						<td>
+							<a ng-click="edit(tournament)" class="btn btn-default btn-labeled btn-flat">
+								<span class="btn-label icon fa fa-pencil"></span>Edit
+							</a>
+							<a ng-click="delete(tournament, $index)" class="btn btn-flat btn-labeled btn-danger">
+								<span class="btn-label icon fa fa-times"></span>Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div ng-if="tournaments.length == 0" class="text-muted panel-body">No tournaments entered</div>
+
+		</section>
+	</div>
+
+</article>

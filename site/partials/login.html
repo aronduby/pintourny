@@ -1,0 +1,70 @@
+<article class="login theme-frost page-signin">
+
+	<header class="page-header">			
+		<div class="row">
+			<!-- Page header, center on small screens -->
+			<h1 class="col-xs-12 col-sm-4 text-center text-left-sm">Login</h1>
+		</div>
+	</header>
+
+	<div class="signin-container">
+
+		<!-- Left side -->
+		<div class="signin-info">
+			<a href="#" class="logo">
+				<img alt="Pinball Pyramid 3" src="img/bride-logo.png" style="margin-top: -5px;">&nbsp;
+				Pinball Pyramid 3
+			</a>
+			<div class="slogan">
+				Let's Play Some Pinball!
+			</div>
+		</div>
+
+		<!-- Right side -->
+		<div class="signin-form">
+
+			<form id="signin-form_id" novalidate="novalidate" ng-submit="login()">
+				<div class="signin-text">
+					<span>Sign In to your account</span>
+				</div>
+
+				<div class="form-group w-icon">
+					<input type="text" name="username" id="username_id" class="form-control input-lg" placeholder="Username" required ng-model="username">
+					<span class="fa fa-user signin-form-icon"></span>
+				</div>
+
+				<div class="form-group w-icon">
+					<input type="password" name="password" id="password_id" class="form-control input-lg" placeholder="Password" required ng-model="password">
+					<span class="fa fa-lock signin-form-icon"></span>
+				</div>
+
+				<div class="form-actions">
+					<button type="submit" class="btn btn-lg btn-primary btn-flat btn-labeled">
+						<span class="btn-label icon fa fa-cloud-upload"></span>
+						<span ng-switch on="login_status">
+							<span ng-switch-when="false">Login</span>
+							<span
+								ng-switch-when="loading" 
+								us-spinner="{
+									color:'#fff',
+									lines: 7,
+									length: 3,
+									width: 4,
+									radius: 5
+								}"
+							>&nbsp;</span>
+							<span ng-switch-when="true">Welcome {{user.username}}</span>
+						</span>
+					</button>
+				</div>
+			</form>
+
+			<div class="signin-with text-muted">
+				You probably don't have an account.
+			</div>
+
+		</div>
+		
+	</div>
+	
+</article>

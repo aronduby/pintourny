@@ -1,0 +1,120 @@
+#container{
+	position:relative;
+}
+
+#tournament nav{
+	position:fixed;
+	width:200px;
+	top:75px;
+	right:auto;
+	bottom:0;
+	left:0;
+}
+#tournament article{
+	position:absolute;
+	top:0;
+	right:0;
+	bottom:0;
+	left:200px;
+}
+
+#tournament .machines{
+	display:flex;
+}
+
+#tournament .repeat-empty td{
+	background-color: transparent;
+	padding: 2em 4em;
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.machine,
+.totals{
+	flex:1;
+	margin:5px;
+	border:1px solid #eee;
+	min-width:230px;
+	max-width:300px;
+}
+
+.machine-data{
+	width:100%;
+	table-layout:fixed;
+	border:5px solid #eee;
+	border-left:0;
+	border-right:0;
+}
+	.machine-data tr :first-child{
+		width:40px;
+		text-align:center;
+	}
+	
+	.machine-data .score{
+		text-align:right;
+	}
+	
+	.machine-data .player{
+    	max-width: 100px;
+    	overflow: hidden;
+    	text-overflow: ellipsis;
+    	white-space: nowrap;
+	}
+	
+.totals-data .cutoff td{
+  border-top:2px solid #f00;
+}
+
+#flare-holder{
+	position:fixed;
+	bottom:2px;
+	right:2px;
+}
+	#flare-holder .alert{
+		border:0;
+		margin-bottom:2px;
+	}
+
+
+/*
+ * Login
+*/
+article#login{
+	width:100%;
+	max-width:350px;
+	margin:2em auto;
+	padding-bottom:4em;
+}
+
+	#login button{
+		width:100%;
+		margin-bottom:20px;
+		text-transform:none;
+		font-size:1.7142em;
+		letter-spacing:-.04em;
+	}
+
+
+/*
+ *	Admin
+*/
+article.admin{
+	margin:10px auto;
+	width:100%;
+	max-width:960px;
+}
+
+
+#socket_status{
+	position:fixed;
+	bottom:10px;
+	left:10px;
+}
+
+#socket_status .loading{
+	display:inline-block;
+	position:relative;
+	margin-right:15px;
+	margin-left:5px;
+	vertical-align:middle;
+}

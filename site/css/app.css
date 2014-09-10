@@ -1,0 +1,353 @@
+body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+}
+
+.btn{
+	border-radius:0;
+	border:none;
+	font-size:13px;
+}
+	.btn.btn-flat{
+		border-bottom:none;
+	}
+		.btn.btn-flat.btn-lg:active{ margin-top:0; }
+		
+		.theme-frost .btn.btn-flat.btn-default:hover{ background:#e5e5e5 !important; } 
+		.theme-frost .btn.btn-flat.btn-primary:hover{ background: #2d93b6 !important; }	
+		.theme-frost .btn.btn-flat.btn-info:hover{ background:#39b3d7 !important; }
+		.theme-frost .btn.btn-flat.btn-success:hover{ background:#46ac46 !important; }
+		.theme-frost .btn.btn-flat.btn-warning:hover{ background:#f29f29 !important; }
+		.theme-frost .btn.btn-flat.btn-danger:hover{ background: #e14430 !important; }
+
+	.btn.btn-flat:active{
+		margin-top:0;
+	}
+	
+.form-control{
+	border-radius:0;
+}
+	
+.loading{
+	margin-top:76px;
+}
+
+#main-menu{
+	top:46px;
+}
+
+/* 
+ *	Tournament Page 
+*/
+.img-bg{
+	display:flex;
+	opacity:.35;
+}
+	.img-bg div{
+		flex:1;
+		height:auto;
+	}
+		.img-bg div img{
+			width:100%;
+			height:auto;
+		}
+		
+/* menu */
+#main-menu .tournament{
+	position:relative;
+}
+	#main-menu .tournament header{
+		position:relative;
+	}
+		#main-menu .tournament h1{
+			position:absolute;
+			left:5px;
+			bottom:5px;
+			font-size:16px;
+			font-weight:bold;
+			margin:0;
+			text-transform:uppercase;
+			text-shadow:0 2px 0 rgba(0,0,0,.75);
+		}
+			#main-menu .tournament h1 a{
+				color:#fff;
+			}
+		
+	#main-menu .tournament .navigation{
+		padding-top:0;
+	}
+	
+
+#tournament .machines{
+	/* position:relative; */
+	/* display:flex; */
+}
+
+	#tournament .machine,
+	#tournament .totals{
+		/* flex:1; */
+		margin-right:30px;
+		border:1px solid #dcdfe0;
+		/* min-width:320px; */
+	}
+
+	#tournament .machine header{
+		position:relative;
+		height:80px;
+	}
+		#tournament .machine header .bg-cover{
+			position:absolute;
+			top:0; right:0;
+			bottom:0; left:0;
+			background:#e8edfd;
+			overflow:hidden;
+			z-index:0;
+		}
+			#tournament .machine header .bg-cover img{
+				position:relative;
+				width:105%;
+				left:-5px;
+				top:-120px;
+				opacity:.73;
+				-webkit-filter:blur(5px);
+			}
+		
+		#tournament .totals header .bg-cover{
+			background:#333;
+		}
+		#tournament .totals header .bg-cover img{
+			-webkit-filter:blur(2px);
+			opacity:.5;
+			top:-60px;
+		}
+		
+		#tournament .machine header .abbv{
+			position:absolute;
+			bottom:6px;
+			right:8px;
+			color:#fff;
+			font-size:18px;
+			font-weight:700;
+			width:48px;
+			height:auto;
+			line-height:48px;
+			background:#97bc48;
+			text-align:center;
+			border-radius:50%;
+		}
+			#tournament .totals header .abbv{
+				background:#e66454;
+				font-size:40px;
+			}
+		#tournament .machine header h2{
+			position:absolute;
+			bottom:8px;
+			left:8px;
+			font-size:18px;
+			font-weight:bold;
+			color:#fff;
+			text-shadow:0 2px 0 rgba(0,0,0,.75);
+			margin:0;
+			z-index:3;
+		}
+
+	#tournament .machine-data{
+		width:100%;
+		table-layout:fixed;
+		border-bottom:1px solid #e4e4e4;
+	}
+		#tournament .machine-data thead th{
+			color:#555555;
+			font-weight:bold;
+			background:#ebebeb;
+		}
+		#tournament .machine-data .rank,
+		#tournament .machine-data .pts{
+			width:40px;
+			text-align:center;
+		}		
+		#tournament .machine-data .score{
+			text-align:right;
+		}		
+		#tournament .machine-data .player{
+	    	max-width: 100px;
+	    	overflow: hidden;
+	    	text-overflow: ellipsis;
+	    	white-space: nowrap;
+		}
+
+	#tournament .repeat-empty td{
+		background-color: transparent;
+		padding: 2em 4em;
+		font-size: 1.3em;
+		font-weight: bold;
+	}
+	
+	/* mostly faking table since we need li for cutoff */
+	#tournament .totals-data{
+		list-style:none;
+		padding:0;
+		margin:0;
+		background:#fff;
+	}
+		#tournament .totals-data li{
+			width:100%;
+			display:flex;
+		}
+			#tournament .totals-data li span{
+				padding:8px 0;
+				flex:1;
+				justify-content:space-between;
+			}			
+			#tournament .totals-data li span.rank{
+				flex:0 0 45px;
+			}
+			#tournament .totals-data li span:last-child{
+				padding-right:8px;
+			}
+		#tournament .totals-data li{
+			border-top:1px solid #e4e4e4;
+		}
+		#tournament .totals-data li:nth-child(even){
+			background:#f9f9f9;
+		}		
+		#tournament .totals-data li.thead{
+			background:#ebebeb;
+			font-weight:bold;
+			border-bottom:2px solid #ddd;
+		}
+	
+	#tournament .totals-data .cutoff{
+		display:block;
+	}
+		#tournament .cutoff span{ 
+			display:inline-block; 
+			vertical-align:middle;
+		}
+			#tournament .cutoff .rank{ width:40px; }
+			#tournament .cutoff .player{ width:100px; }
+			#tournament .cutoff .score{ width:170px; }
+		
+	#tournament .totals-data .cutoff::before{
+		content:'qualified cutoff';
+		display:block;
+		width:100%;
+		background:#e66454;
+		text-align:center;
+		color:#fff;
+		text-transform:uppercase;
+		font-size:8px;
+		font-weight:700;
+		padding:3px;
+		letter-spacing:.05em;
+		border:1px solid #c85749;
+	}
+	
+	
+	/* slick overrides */
+	#tournament .machines{
+		margin-left:40px;
+		margin-right:40px;
+	}
+	.slick-prev, 
+	.slick-next { 
+		height:40px; 
+		width:40px; 
+		position:fixed;
+		right:5px;
+		top:50%;
+		margin-top:-20px; 		
+	}
+		.slick-prev{
+			right:auto;
+			left:250px;
+		}
+	.slick-prev:before, 
+	.slick-next:before { 
+		font-size:37px; 
+		color: #77b7c5; 
+	}
+	
+	#tournament .fuck-slick{
+		border-color:transparent;
+		text-align:center;
+		padding-top:50px;
+	}
+
+/* Signin Form */
+.page-signin .signin-info{
+	text-align:center;
+}
+	.signin-info .logo img{
+		width:80%;
+		margin-bottom:20px;
+	}
+	.signin-with{
+		text-align:center;
+	}
+
+/* admin main-menu */
+#menu-content-demo{
+	padding-left:20px !important;
+	padding-top:20px !important;
+	color:#b5b6b6;
+}
+	#menu-content-demo > div{
+		width:auto;
+	}
+	#menu-content-demo .user-type{
+		float:right;
+	}
+
+#main-menu li.user-score{
+	border-bottom:1px solid #363941;
+}
+
+/* */
+.page-header{}
+	.page-header span.input-group-addon{
+		border:none;
+		background: #fff;
+		background: rgba(0,0,0,.05);
+	}
+	.page-header input[type="search"]{
+		border:none;
+		background: #fff;
+		background: rgba(0,0,0,.05);
+	}
+	.page-header .btn.btn-flat{
+		padding:9px 28px 9px 12px;
+	}
+
+/* Admin Tables */
+.admin .table td,
+.admin .table th{
+	padding:12px;
+	vertical-align:middle;
+}
+	.admin .table th{
+		vertical-align: bottom;
+	}
+	
+	/* sortable ths */
+	th.sortable{
+		cursor:pointer;
+	}
+		.table-warning th.sortable:hover{
+			background:#e2972d;
+		}
+		
+	/* thumbs in tables */
+	.admin .table td img{
+		width:60px;
+		margin:-6px;
+	}
+
+	/* edit buttons on desktop only visible on hover */
+	@media screen and (min-width: 1025px){
+		.admin .table td .btn{ visibility: hidden; }
+		.admin .table tr:hover td .btn{ visibility: visible; }
+	}

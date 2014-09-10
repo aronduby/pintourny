@@ -1,0 +1,51 @@
+<div class="modal-container">
+	<header class="modal-header">
+		<button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+		<h4 class="modal-title">{{title}}</h4>
+	</header>
+
+	<form name="add-edit" class="form" role="form" ng-submit="save()">
+
+		<section class="modal-body">
+
+			<div class="form-group">
+				<label for="username">Username</label>
+				<input type="text" class="form-control" id="username" placeholder="Username" required ng-model="user.username" />
+			</div>
+
+			<div class="form-group">
+				<label for="role">Role</label>
+				<select class="form-control" id="role" required 
+					ng-model="user.role_id"
+					ng-options="role.id as role.title for role in roles | orderBy:'title'"
+				></select>
+			</div>
+
+			<div class="form-group">
+				<label for="password">Password</label>
+				<input type="password" class="form-control" id="password" ng-model="user.password" />
+				<p class="help-block">Leave blank to not change if its an existing user</p>
+			</div>
+
+		</section>
+
+		<footer class="modal-footer">
+			<button type="submit" class="btn btn-lg btn-success btn-flat btn-labeled">
+				<span class="btn-label icon fa fa-save"></span>
+				<span
+					ng-show="saving.active()" 
+					us-spinner="{
+						color:'#fff',
+						lines: 7,
+						length: 3,
+						width: 4,
+						radius: 5
+					}"
+				>&nbsp;</span>
+				<span ng-show="!saving.active()">Save</span>
+			</button>
+			<button type="button" class="btn btn-lg btn-default btn-flat btn-labeled" ng-click="cancel()"><span class="btn-label icon fa fa-ban"></span>Cancel</button>
+		</footer>
+
+	</form>
+</div>

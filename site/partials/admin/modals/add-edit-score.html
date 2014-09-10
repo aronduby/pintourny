@@ -1,0 +1,54 @@
+<div class="modal-container">
+	<header class="modal-header">
+		<button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+		<h4 class="modal-title">{{title}}</h4>
+	</header>
+
+	<form name="add-edit" class="form" role="form" ng-submit="save()">
+
+		<section class="modal-body">
+
+			<div class="form-group">
+				<label for="player">Player</label>
+				<select class="form-control" id="player" required 
+					ng-model="score.player_id"
+					ng-options="player.id as (player.first_name+' '+player.last_name) for player in players | orderBy:'first_name'"
+				></select>
+			</div>
+
+			<div class="form-group">
+				<label for="machine">Machine</label>
+				<select class="form-control" id="machine" required 
+					ng-disabled="!score.player_id"
+					ng-model="score.machine_id"
+					ng-options="machine.id as machine.title group by machine.tournament.title for machine in player_machines | orderBy:'title'"
+				></select>
+			</div>
+
+			<div class="form-group">
+				<label for="score">Score</label>
+				<input type="tel" class="form-control" id="score" placeholder="Score" required ng-model="score.score" ng-disabled="!score.machine_id" currency-input="" />
+			</div>
+
+		</section>
+
+		<footer class="modal-footer">
+			<button type="submit" class="btn btn-lg btn-success btn-flat btn-labeled">
+				<span class="btn-label icon fa fa-save"></span>
+				<span
+					ng-show="saving.active()" 
+					us-spinner="{
+						color:'#fff',
+						lines: 7,
+						length: 3,
+						width: 4,
+						radius: 5
+					}"
+				>&nbsp;</span>
+				<span ng-show="!saving.active()">Save</span>
+			</button>
+			<button type="button" class="btn btn-lg btn-default btn-flat btn-labeled" ng-click="cancel()"><span class="btn-label icon fa fa-ban"></span>Cancel</button>
+		</footer>
+
+	</form>
+</div>

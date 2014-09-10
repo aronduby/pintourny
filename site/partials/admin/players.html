@@ -1,0 +1,87 @@
+<article class="admin players">
+
+	<div class="loading" ng-show="playerTracker.active()" us-spinner="{color:'#555'}"></div>
+	<div ng-hide="playerTracker.active()">
+
+		<header class="page-header">			
+			<div class="row">
+				<!-- Page header, center on small screens -->
+				<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>Admin</strong> Players</h1>
+
+				<div class="col-xs-12 col-sm-8">
+					<div class="row">
+						<hr class="visible-xs no-grid-gutter-h">
+						<!-- "Create project" button, width=auto on desktops -->
+						<div class="pull-right col-xs-12 col-sm-auto">
+							<a ng-click="add()" class="btn btn-primary btn-labeled btn-flat" style="width: 100%;">
+								<span class="btn-label icon fa fa-plus"></span>New Player
+							</a>
+						</div>
+
+						<!-- Margin -->
+						<div class="visible-xs clearfix form-group-margin"></div>
+
+						<!-- Search field -->
+						<form action="" class="pull-right col-xs-12 col-sm-6">
+							<div class="input-group no-margin">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input type="search" placeholder="Search..." class="form-control no-padding-hr" ng-model="playerSearch">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="player-panel players panel panel-default table-warning">
+
+			<table ng-show="!playerTracker.active() && players.length" class="table table-striped">
+				<thead>
+					<tr>
+						<th class="sortable first_name" ng-click="predicate='first_name';reverse=!reverse">First Name&nbsp;
+							<span 
+								class="fa"
+								ng-class="{
+									'fa-sort': predicate!='first_name',
+									'fa-sort-asc': predicate=='first_name' && !reverse, 
+									'fa-sort-desc': predicate=='first_name' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable last_name" ng-click="predicate='last_name';reverse=!reverse">Last Name&nbsp;
+							<span 
+								class="fa"
+								ng-class="{
+									'fa-sort': predicate!='last_name',
+									'fa-sort-asc': predicate=='last_name' && !reverse, 
+									'fa-sort-desc': predicate=='last_name' && reverse
+								}" 
+							></span>
+						</th>							
+						<th class="tournaments">Tournaments</th>
+						<th class="buttons"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="player in players | filter:playerSearch | orderBy:predicate:reverse" ng-dblclick="edit(player)">
+						<td data-title="first name">{{player.first_name}}</td>
+						<td data-title="last name">{{player.last_name}}</td>
+						<td data-title="tournaments">{{player.tournaments | orderBy:'title' | pluck:'title' | join:', '}}</td>
+						<td>
+							<a ng-click="edit(player)" class="btn btn-default btn-labeled btn-flat">
+								<span class="btn-label icon fa fa-pencil"></span>Edit
+							</a>
+							<a ng-click="delete(player, $index)" class="btn btn-flat btn-labeled btn-danger">
+								<span class="btn-label icon fa fa-times"></span>Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div ng-if="players.length == 0" class="text-muted panel-body">No players entered</div>
+
+		</section>
+	</div>
+
+</article>

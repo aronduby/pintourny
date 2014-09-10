@@ -1,0 +1,85 @@
+<article class="admin players">
+
+	<div class="loading" ng-show="userTracker.active()" us-spinner="{color:'#555'}"></div>
+	<div ng-hide="userTracker.active()">
+
+		<header class="page-header">			
+			<div class="row">
+				<!-- Page header, center on small screens -->
+				<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>Admin</strong> Users</h1>
+
+				<div class="col-xs-12 col-sm-8">
+					<div class="row">
+						<hr class="visible-xs no-grid-gutter-h">
+						<!-- "Create project" button, width=auto on desktops -->
+						<div class="pull-right col-xs-12 col-sm-auto">
+							<a ng-click="add()" class="btn btn-primary btn-labeled btn-flat" style="width: 100%;">
+								<span class="btn-label icon fa fa-plus"></span>New User
+							</a>
+						</div>
+
+						<!-- Margin -->
+						<div class="visible-xs clearfix form-group-margin"></div>
+
+						<!-- Search field -->
+						<form action="" class="pull-right col-xs-12 col-sm-6">
+							<div class="input-group no-margin">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input type="search" placeholder="Search..." class="form-control no-padding-hr" ng-model="userSearch">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="user-panel users panel panel-default table-warning">
+
+			<table ng-show="!userTracker.active() && users.length" class="table table-striped table-hover" >
+				<thead>
+					<tr>
+						<th class="sortable username" ng-click="predicate='username';reverse=!reverse">Username
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='username',
+									'fa-sort-asc': predicate=='username' && !reverse, 
+									'fa-sort-desc': predicate=='username' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable role" ng-click="predicate='role.title';reverse=!reverse">Role
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='role.title',
+									'fa-sort-asc': predicate=='role.title' && !reverse, 
+									'fa-sort-desc': predicate=='role.title' && reverse
+								}" 
+							></span>
+						</th>							
+						<th class="buttons"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="user in users | filter:userSearch | orderBy:predicate:reverse track by user.id" ng-dblclick="edit(user)">
+						<td data-title="username">{{user.username}}</td>
+						<td data-title="role">{{user.role.title}}</td>
+						<td>
+							<a ng-click="edit(user)" class="btn btn-default btn-labeled btn-flat">
+								<span class="btn-label icon fa fa-pencil"></span>Edit
+							</a>
+							<a ng-click="delete(user, $index)" class="btn btn-flat btn-labeled btn-danger">
+								<span class="btn-label icon fa fa-times"></span>Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div ng-if="users.length == 0" class="text-muted panel-body">No users entered</div>
+
+		</section>
+	</div>
+
+</article>

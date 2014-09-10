@@ -1,0 +1,39 @@
+{
+  "name": "angular-slick",
+  "version": "0.1.10",
+  "main": "dist/slick.js",
+  "ignore": [
+    "app",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore ",
+    ".jshintrc",
+    "Gruntfile.js",
+    "README.md ",
+    "bower.json",
+    "package.json"
+  ],
+  "keywords": [
+    "angular",
+    "slick",
+    "carousel"
+  ],
+  "dependencies": {
+    "angular": "~1.2.6",
+    "slick-carousel": "~1.3.5"
+  },
+  "author": {
+    "name": "Vasyl Stanislavchuk"
+  },
+  "homepage": "https://github.com/vasyabigi/angular-slick",
+  "_release": "0.1.10",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.10",
+    "commit": "3aeb9645a07830a9fb86c51ed3f1956ff87efe98"
+  },
+  "_source": "git://github.com/vasyabigi/angular-slick.git",
+  "_target": "~0.1.10",
+  "_originalSource": "angular-slick",
+  "_direct": true
+}

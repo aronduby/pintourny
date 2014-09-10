@@ -1,0 +1,118 @@
+<article class="admin scores">
+
+	<div class="loading" ng-show="scoreTracker.active()" us-spinner="{color:'#555'}"></div>
+	<div ng-hide="scoreTracker.active()">
+
+		<header class="page-header">			
+			<div class="row">
+				<!-- Page header, center on small screens -->
+				<h1 class="col-xs-12 col-sm-4 text-center text-left-sm"><strong>Admin</strong> Scores</h1>
+
+				<div class="col-xs-12 col-sm-8">
+					<div class="row">
+						<hr class="visible-xs no-grid-gutter-h">
+						<!-- "Create project" button, width=auto on desktops -->
+						<div class="pull-right col-xs-12 col-sm-auto">
+							<a ng-click="add()" class="btn btn-primary btn-labeled btn-flat" style="width: 100%;">
+								<span class="btn-label icon fa fa-plus"></span>New Score
+							</a>
+						</div>
+
+						<!-- Margin -->
+						<div class="visible-xs clearfix form-group-margin"></div>
+
+						<!-- Search field -->
+						<form action="" class="pull-right col-xs-12 col-sm-6">
+							<div class="input-group no-margin">
+								<span class="input-group-addon"><i class="fa fa-search"></i></span>
+								<input type="search" placeholder="Search..." class="form-control no-padding-hr" ng-model="scoreSearch">
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="player-panel scores panel panel-default table-warning">
+
+			<table ng-show="!scoreTracker.active() && scores.length" class="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th class="sortable first_name" ng-click="predicate='player.first_name';reverse=!reverse">First Name&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='player.first_name',
+									'fa-sort-asc': predicate=='player.first_name' && !reverse, 
+									'fa-sort-desc': predicate=='player.first_name' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable last_name" ng-click="predicate='player.last_name';reverse=!reverse">Last Name&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='player.last_name',
+									'fa-sort-asc': predicate=='player.last_name' && !reverse, 
+									'fa-sort-desc': predicate=='player.last_name' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable tournament" ng-click="predicate='machine.tournament.title';reverse=!reverse">Tournament&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='machine.tournament.title',
+									'fa-sort-asc': predicate=='machine.tournament.title' && !reverse, 
+									'fa-sort-desc': predicate=='machine.tournament.title' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable machine" ng-click="predicate='machine.title';reverse=!reverse">Machine&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='machine.title',
+									'fa-sort-asc': predicate=='machine.title' && !reverse, 
+									'fa-sort-desc': predicate=='machine.title' && reverse
+								}" 
+							></span>
+						</th>
+						<th class="sortable score" ng-click="predicate='score';reverse=!reverse">Score&nbsp;
+							<span 
+								class="fa" 
+								ng-class="{
+									'fa-sort': predicate!='score',
+									'fa-sort-asc': predicate=='score' && !reverse, 
+									'fa-sort-desc': predicate=='score' && reverse
+								}" 
+							></span>
+						</th>						
+						<th class="buttons"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="score in scores | filter:scoreSearch | orderBy:predicate:reverse track by score.id" ng-dblclick="edit(score)">
+						<td data-title="first name">{{score.player.first_name}}</td>
+						<td data-title="last name">{{score.player.last_name}}</td>
+						<td data-title="tournament">{{score.machine.tournament.title}}</td>
+						<td data-title="machine">{{score.machine.title}}</td>
+						<td data-title="score">{{score.score | number:0 }}</td>
+						<td>
+							<a ng-click="edit(score)" class="btn btn-default btn-labeled btn-flat">
+								<span class="btn-label icon fa fa-pencil"></span>Edit
+							</a>
+							<a ng-click="delete(score, $index)" class="btn btn-flat btn-labeled btn-danger">
+								<span class="btn-label icon fa fa-times"></span>Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div ng-if="scores.length == 0" class="text-muted panel-body">No scores entered</div>
+
+		</section>
+	</div>
+
+</article>

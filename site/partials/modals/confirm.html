@@ -1,0 +1,15 @@
+<div class="modal-container">
+	<header class="modal-header">
+		<button type="button" class="close" aria-hidden="true" ng-click="cancel()">&times;</button>
+		<h4 class="modal-title">Are You Sure?</h4>
+	</header>
+	<section class="modal-body">
+		<p ng-bind-html="title"></p>
+	</section>
+	<footer class="modal-footer">
+		<center class="btn-group btn-group-block">
+			<button class="btn btn-lg btn-success" ng-click="confirm()">Yes</button>
+			<button class="btn btn-lg btn-default" ng-click="cancel()">Cancel</button>
+		</center>
+	</footer>
+</div>
