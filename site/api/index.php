@@ -27,6 +27,12 @@ $capsule->setAsGlobal();
 // Setup the Eloquent ORM... (optional; unless you've used setEventDispatcher())
 $capsule->bootEloquent();
 
+/*
+ *	Setup Redis for PubSub for events
+*/
+$redis = new Predis\Client();
+$pub = new Publisher($redis, 'pp3');
+
 
 /*
  *	Setup Slim
@@ -39,7 +45,7 @@ $require_admin = new User\Middleware\RequireAdmin($UC);
 
 $force_hash = null;
 // force it to be me
-$force_hash = '$2y$10$hsRagMZGf43bK04BPoNLLeHr4dKTxIgLxgV1CZY2iEMSjvimoU93y';
+// $force_hash = '$2y$10$hsRagMZGf43bK04BPoNLLeHr4dKTxIgLxgV1CZY2iEMSjvimoU93y';
 
 $app = new \Slim\Slim();
 $app->add(new JsonToPost());
@@ -66,7 +72,8 @@ $app->get('/', function() use($app, $UC){
 */
 $app->get('/tournaments', function() use ($app){
 
-	$app->render(200, ['data' => Tournament::with('machines.scores.player', 'machines.scores.entered_by', 'players')->get() ]);
+	//$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
+	$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
 });
 
 $app->get('/tournaments/:id', function($id) use ($app){
@@ -74,33 +81,39 @@ $app->get('/tournaments/:id', function($id) use ($app){
 	$app->render(200, ['data' => $tournament ]);
 });
 
-$app->post('/tournaments', $require_admin, function() use ($app){
+$app->post('/tournaments', $require_admin, function() use ($app, $pub){
 
 	$title = $app->request->post('title');
 	$description = $app->request->post('description');
+	$cutoff = $app->request->post('cutoff');
 
 	$tournament = new Tournament();
 	$tournament->title = $title;
 	$tournament->description = $description;
+	$tournament->cutoff = $cutoff;
 	$tournament->save();
 
+	$pub->send('tournament.new', $tournament);
 	$app->render(200, ['data' => $tournament ]);
 });
 
-$app->put('/tournaments/:id', $require_admin, function($id) use ($app){
+$app->put('/tournaments/:id', $require_admin, function($id) use ($app, $pub){
 
 	$title = $app->request->post('title');
 	$description = $app->request->post('description');
+	$cutoff = $app->request->post('cutoff');
 
 	$tournament = Tournament::find($id);
 	$tournament->title = $title;
 	$tournament->description = $description;
+	$tournament->cutoff = $cutoff;
 	$tournament->save();
 
+	$pub->send('tournament.update', $tournament);
 	$app->render(200, ['data' => $tournament ]);
 });
 
-$app->delete('/tournaments/:id', $require_admin, function($id) use($app){
+$app->delete('/tournaments/:id', $require_admin, function($id) use($app, $pub){
 
 	$tournament = Tournament::find($id);
 	$tournament->machines()->delete();
@@ -108,6 +121,7 @@ $app->delete('/tournaments/:id', $require_admin, function($id) use($app){
 
 	$deleted = $tournament->delete();
 
+	$pub->send('tournament.delete', $tournament);
 	$app->render(200, ['data' => $deleted]);
 });
 
@@ -125,7 +139,7 @@ $app->get('/players/:id', function($id) use ($app){
 	$app->render(200, ['data' => $player ]);
 });
 
-$app->post('/players', $require_admin, function() use ($app){
+$app->post('/players', $require_admin, function() use ($app, $pub){
 	
 	$first_name = $app->request->post('first_name');
 	$last_name = $app->request->post('last_name');
@@ -141,10 +155,11 @@ $app->post('/players', $require_admin, function() use ($app){
 	$player->tournaments()->sync($tournaments);
 	$player->tournaments;
 
+	$pub->send('player.new', $player);
 	$app->render(200, ['data' => $player]);
 });
 
-$app->put('/players/:id', $require_admin, function($id) use ($app){
+$app->put('/players/:id', $require_admin, function($id) use ($app, $pub){
 
 	$first_name = $app->request->post('first_name');
 	$last_name = $app->request->post('last_name');
@@ -152,7 +167,7 @@ $app->put('/players/:id', $require_admin, function($id) use ($app){
 	if($tournaments == null)
 		$tournaments = [];
 
-	$player = Player::find($id);
+	$player = Player::findOrFail($id);
 	$player->first_name = $first_name;
 	$player->last_name = $last_name;
 	$player->save();
@@ -160,16 +175,18 @@ $app->put('/players/:id', $require_admin, function($id) use ($app){
 	$player->tournaments()->sync($tournaments);
 	$player->tournaments;
 
+	$pub->send('player.update', $player);
 	$app->render(200, ['data' => $player]);
 });
 
-$app->delete('/players/:id', $require_admin, function($id) use ($app){
+$app->delete('/players/:id', $require_admin, function($id) use ($app, $pub){
 
 	$player = Player::find($id);
 	$player->scores()->delete();
 	$player->tournaments()->detach();
 	$deleted = $player->delete();
 
+	$pub->send('player.delete', $player);
 	$app->render(200, ['data' => $deleted]);
 });
 
@@ -187,7 +204,7 @@ $app->get('/machines/:id', function($id) use ($app){
 	$app->render(200, ['data' => $machine ]);
 });
 
-$app->post('/machines', $require_admin, function() use($app){
+$app->post('/machines', $require_admin, function() use($app, $pub){
 	
 	$tournament_id = $app->request->post('tournament_id');
 	$abbv = $app->request->post('abbv');
@@ -203,10 +220,11 @@ $app->post('/machines', $require_admin, function() use($app){
 
 	$machine->tournament;
 
+	$pub->send('machine.new', $machine);
 	$app->render(200, ['data' => $machine ]);
 });
 
-$app->put('/machines/:id', $require_admin, function($id) use($app){
+$app->put('/machines/:id', $require_admin, function($id) use($app, $pub){
 
 	$tournament_id = $app->request->post('tournament_id');
 	$abbv = $app->request->post('abbv');
@@ -222,16 +240,18 @@ $app->put('/machines/:id', $require_admin, function($id) use($app){
 
 	$machine->tournament;
 
+	$pub->send('machine.update', $machine);
 	$app->render(200, ['data' => $machine ]);
 });
 
-$app->delete('/machines/:id', $require_admin, function($id) use($app){
+$app->delete('/machines/:id', $require_admin, function($id) use($app, $pub){
 
 	$machine = Machine::find($id);
 	$machine->scores()->delete();
 
 	$deleted = $machine->delete();
 
+	$pub->send('machine.delete', $machine);
 	$app->render(200, ['data' => $deleted ]);
 });
 
@@ -250,7 +270,7 @@ $app->get('/points/:place', function($place) use($app){
 	$app->render(200, ['data' => Points::find($place)->points ]);
 });
 
-$app->post('/points', $require_admin, function() use($app){
+$app->post('/points', $require_admin, function() use($app, $pub){
 
 	$place_to_points = $app->request->post('points');
 	if(!is_array($place_to_points) || !count($place_to_points))
@@ -263,23 +283,27 @@ $app->post('/points', $require_admin, function() use($app){
 	}
 
 	$data = Capsule::table('points')->orderBy('place')->lists('points', 'place');
+
+	$pub->send('points.new', $data);
 	$app->render(200, ['data' => $data]);
 });
 
-$app->put('/points/:place', $require_admin, function($place) use($app){
+$app->put('/points/:place', $require_admin, function($place) use($app, $pub){
 
 	$points = Points::firstOrNew(['place' => $place]);
 	$points->points = $app->request->post('points');
 	$points->save();
 
+	$pub->send('points.update', $points);
 	$app->render(200, ['data' => $points->points]);
 });
 
-$app->delete('/points/:place', $require_admin, function($place) use($app){
+$app->delete('/points/:place', $require_admin, function($place) use($app, $pub){
 
 	$points = Points::find($place);
 	$deleted = $points->delete();
 
+	$pub->send('points.delete', $points);
 	$app->render(200, ['data' => $deleted]);
 });
 
@@ -289,78 +313,110 @@ $app->delete('/points/:place', $require_admin, function($place) use($app){
 */
 $app->get('/users', $require_admin, function() use($app){
 
-	$app->render(200, ['data' => User\User::with('roles')->get() ]);
+	$app->render(200, ['data' => User\User::with('role')->get() ]);
+});
+
+$app->get('/users/checklogin', $require_login, function() use($app, $UC){
+	$me = User\User::with('role')->where('id', '=', $UC()->id)->firstOrFail();
+	$app->render(200, ['data' => $me ]);
 });
 
 $app->get('/users/:id', $require_admin, function($id) use($app){
 
-	$user = User\User::with('roles')->where('id', '=', $id)->firstOrFail();
+	$user = User\User::with('role')->where('id', '=', $id)->firstOrFail();
 	$app->render(200, ['data' => $user]);
 });
 
-$app->post('/users', $require_admin, function() use($app){
+$app->post('/users', $require_admin, function() use($app, $pub){
 
 	$username = $app->request->post('username');
 	$password = $app->request->post('password');
-	$roles = $app->request->post('roles');
-	if($roles == null)
-		$roles = [];
+	$role_id = $app->request->post('role_id');
 
 	$user = new User\User();
 	$user->username = $username;
 	$user->password = $password;
+	$user->role_id = $role_id;
 	$user->save();
 
-	$user->roles()->sync($roles);
-	$user->roles;
+	$user->role;
 
+	$pub->send('user.new', $user);
 	$app->render(200, ['data' => $user]);
 });
 
-$app->post('/users/login', function() use($app, $UC){
+$app->post('/users/login', function() use($app, $UC, $pub){
 	
 	$username = $app->request->post('username');
 	$password = $app->request->post('password');
 
 	$user = $UC->loginFromRegistry($username, $password);
-	$user->roles;
+	$user->role;
 
+	$app->response->headers->set('User-Hash', $user->hash);
+
+	$pub->send('user.login', $user);
 	$app->render(200, ['data' => $user]);
 });
 
-$app->put('/users/:id', $require_admin, function($id) use($app){
+$app->post('/users/:id/logout', $require_login, function() use($app, $UC, $pub){
+
+	$UC->logout();
+
+	$pub->send('user.logout', $UC());
+	$app->render(200, ['data' => 'loggedout']);
+
+});
+
+$app->put('/users/:id', $require_admin, function($id) use($app, $pub){
 
 	$username = $app->request->post('username');
 	$password = $app->request->post('password');
-	$roles = $app->request->post('roles');
-	if($roles == null)
-		$roles = [];
+	$role_id = $app->request->post('role_id');
 
 	$user = User\User::findOrFail($id);
 	$user->username = $username;
-	$user->password = $password;
+	$user->role_id = $role_id;
+	if($password != null)
+		$user->password = $password;
+
 	$user->save();
 
-	$user->roles()->sync($roles);
-	$user->roles;
+	$user->role;
 
+	$pub->send('user.update', $user);
 	$app->render(200, ['data' => $user]);
 });
 
-$app->delete('/users/:id', $require_admin, function($id) use($app){
+$app->delete('/users/:id', $require_admin, function($id) use($app, $pub){
 
 	$user = User\User::findOrFail($id);
-	$user->roles()->sync([]);
 
 	$deleted = $user->delete();
+
+	$pub->send('user.delete', $user);
 	$app->render(200, ['data' => $deleted]);
+});
+
+/*
+ *	Roles
+*/
+$app->get('/roles', $require_admin, function() use ($app){
+
+	$app->render(200, ['data' => User\Role::all()]);
 });
 
 
 /*
  *	Scores
 */
-$app->post('/scores', $require_login, function() use($app, $UC){
+$app->get('/scores', function() use ($app){
+
+	$scores = Score::with('machine.tournament', 'player')->get();
+	$app->render(200, ['data' => $scores]);
+});
+
+$app->post('/scores', $require_login, function() use($app, $UC, $pub){
 
 	$player_id = $app->request->post('player_id');
 	$machine_id = $app->request->post('machine_id');
@@ -374,15 +430,21 @@ $app->post('/scores', $require_login, function() use($app, $UC){
 		$current_score->entered_by = $UC()->id;
 
 		$current_score->save();
+
+		// need the full player for the front-end
+		$current_score->player;
+		$current_score->machine;
+		$current_score->machine->tournament;
 		
+		$pub->send('score.new', $current_score);
 		$app->render(200, ['data' => $current_score]);
 
 	} else {
-		$app->render(208, ['data' => 'Submitted score is less than current score of ' . $current_score->score]);
+		$app->render(409, ['data' => 'Submitted score is less than current score of ' . number_format($current_score->score)], 5000);
 	}
 });
 
-$app->put('/scores/:id', $require_admin, function($id) use($app){
+$app->put('/scores/:id', $require_admin, function($id) use($app, $pub){
 
 	$player_id = $app->request->post('player_id');
 	$machine_id = $app->request->post('machine_id');
@@ -395,7 +457,22 @@ $app->put('/scores/:id', $require_admin, function($id) use($app){
 
 	$current_score->save();
 
+	// need the full player for the front-end
+	$current_score->player;
+	$current_score->machine;
+	$current_score->machine->tournament;
+
+	$pub->send('score.update', $current_score);
 	$app->render(200, ['data' => $current_score]);
+});
+
+$app->delete('/scores/:id', $require_admin, function($id) use($app, $pub){
+
+	$score = Score::findOrFail($id);
+	$deleted = $score->delete();
+
+	$pub->send('score.delete', $score);
+	$app->render(200, ['data' => $deleted]);
 });
 
 

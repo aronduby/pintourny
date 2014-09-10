@@ -82,7 +82,7 @@ class Controller{
 		return $user;
 	}
 
-	private function createUniqueHash($token_len = 16, $table = 'user', $field = 'hash'){
+	private function createUniqueHash($token_len = 16, $table = 'users', $field = 'hash'){
 
 		/*
 		$count = 1;

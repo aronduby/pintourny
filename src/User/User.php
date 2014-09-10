@@ -16,8 +16,8 @@ class User extends \Illuminate\Database\Eloquent\Model{
 		self::$crypt = new \PasswordLib\PasswordLib();
 	}
 
-	public function roles(){
-		return $this->belongsToMany('User\Role', 'user_roles');
+	public function role(){
+		return $this->belongsTo('User\Role');
 	}
 
 

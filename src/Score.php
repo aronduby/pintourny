@@ -18,6 +18,12 @@ class Score extends Illuminate\Database\Eloquent\Model{
 		return $this->belongsTo('User\User', 'entered_by', 'id');
 	}
 
+	/*
+	public function getScoreAttribute($value){
+		return (int)$value;
+	}
+	*/
+
 }
 
 ?>
