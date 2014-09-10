@@ -98,7 +98,7 @@ angular.module('myApp.services', [])
 	return _self;
 }])
 .factory('socket', ['$rootScope', '$window', function($rootScope, $window) {
-	var addr = 'http://'+$window.location.hostname+':835';
+	var addr = 'http://'+$window.location.hostname+':773';
 	var socket = io(addr,{
 		'sync disconnect on unload': true,
 		'reconnectionAttempts': 5

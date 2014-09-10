@@ -1,6 +1,6 @@
 var redis = require("redis"),
 	listener = redis.createClient(),
-	io = require('socket.io').listen(835,{
+	io = require('socket.io').listen(773,{
 		'close timeout': 3600, // 60 minutes to re-open a closed connection
 		'browser client minification': true,
 		'browser client etag': true,
