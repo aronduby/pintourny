@@ -31,6 +31,10 @@ body {
 		margin-top:0;
 	}
 	
+.dropdown-menu{
+	font-size:1em;
+}
+	
 .form-control{
 	border-radius:0;
 }
@@ -42,6 +46,18 @@ body {
 #main-menu{
 	top:46px;
 	/* max-width: 240px; */
+}
+
+#main-navbar.open #main-navbar-collapse{
+	height:auto;
+	overflow:hidden;
+	display:block;
+}
+
+@media (max-width:768px){
+	#main-navbar .caret{
+		display:none;
+	}
 }
 
 #socket_status{	
