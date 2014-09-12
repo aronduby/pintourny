@@ -275,7 +275,7 @@ angular.module('myApp', [
 
 	// toggle main-menu when click is triggered
 	$(document).on('click', '#main-menu a', function(){
-		PixelAdmin.plugins.main_menu.toggle();
+		$('body').toggleClass('mme');
 	});
 
 	$('#main-navbar').on('click', 'a:not(.dropdown-toggle)', function(){

@@ -163,6 +163,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.user = Auth.user;
 	$scope.userRoles = Auth.userRoles;
 	$scope.accessLevels = Auth.accessLevels;
+	$scope.navbar_open = false;
 
 	$scope.logout = function() {
 		Auth.logout(function() {
@@ -174,6 +175,11 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 			flare.error("Failed to logout: "+err.msg);
 		});
 	};
+
+	$scope.toggleMainMenu = function(){
+		$scope.navbar_open = false;
+		$('body').toggleClass('mme');
+	}
 }])
 
 .controller('SocketStatusCtrl', ['$scope', 'socket', 'flare', '$timeout', function($scope, socket, flare, $timeout){

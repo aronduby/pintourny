@@ -41,7 +41,7 @@
 	<div id ="main-wrapper">
 
 		<nav id="main-navbar" class="navbar navbar-default" role="navigation" ng-controller="NavCtrl">
-			<button type="button" id="main-menu-toggle"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
+			<button type="button" id="main-menu-toggle" ng-click="toggleMainMenu()"><i class="navbar-icon fa fa-bars icon"></i><span class="hide-menu-text">HIDE MENU</span></button>
 			
 			<div class="navbar-inner">
 				<div class="navbar-header">
@@ -54,12 +54,13 @@
 						class="navbar-toggle dropdown-toggle" 
 						data-toggle="collapse" 
 						data-target="#main-navbar-collapse"
+						ng-click="navbar_open = !navbar_open"
 					>
 						<i class="navbar-icon fa fa-bars"></i>
 					</button>
 				</div>
 
-				<div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse">
+				<div id="main-navbar-collapse" class="collapse navbar-collapse main-navbar-collapse" ng-class="{'in': navbar_open}">
 					<div>
 						<ul class="nav navbar-nav">
 							<li>
@@ -175,9 +176,6 @@
 
 	<script src="components/angular-order-object-by/src/ng-order-object-by.js"></script>
 
-	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script src="js/pixel-admin.js"></script>
-
 
 	<script src="js/app.js"></script>
 	<script src="js/services.js"></script>
@@ -187,14 +185,6 @@
 
 	<!-- Templates/Partials -->
 	
-
-	<script type="text/javascript">
-		var init = [];
-		init.push(function () {
-			// Javascript code here
-		})
-		window.PixelAdmin.start(init);
-	</script>
 
 </body>
 </html>

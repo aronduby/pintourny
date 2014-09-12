@@ -57,10 +57,6 @@ $app->add(new \SlimJson\Middleware([
 	'json.status' => true  
 ]));
 
-
-
-
-
 $app->get('/', function() use($app, $UC){
 	$app->render(200, ['data' => User\User::where('username', '=', 'aronduby')->first() ]);
 });
