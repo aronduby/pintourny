@@ -389,6 +389,27 @@ body {
 		color: #77b7c5; 
 	}
 	
+	@media (max-width:768px){
+		#main-navbar .caret{
+			display:none;
+		}
+	
+		.slick-prev,
+		.slick-next{
+			width:30px;
+			height:30px;
+		}
+			.slick-prev::before,
+			.slick-next::before{
+				font-size:30px;
+			}
+			
+		#tournament .machines{
+			margin-left:22px;
+			margin-right:22px;
+		}
+	}
+	
 	#tournament .fuck-slick{
 		border-color:transparent;
 		text-align:center;
