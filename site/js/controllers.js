@@ -683,7 +683,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 
 		add_window.result.then(function(u){
 			if(u != false)
-				$scope.players.push( u );	
+				$scope.users.push( u );	
 		});
 	};
 
