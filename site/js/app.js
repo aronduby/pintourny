@@ -273,15 +273,4 @@ angular.module('myApp', [
 	});
 
 
-	// toggle main-menu when click is triggered
-	$(document).on('click', '#main-menu a', function(){
-		$('body').toggleClass('mme');
-	});
-
-	$('#main-navbar').on('click', 'a:not(.dropdown-toggle)', function(){
-		$('.in,.open').removeClass('in open');
-		// $(this).closest(".dropdown-menu").prev().dropdown("toggle");
-	});
-
-
 }]);

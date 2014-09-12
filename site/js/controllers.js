@@ -180,6 +180,16 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 		$scope.navbar_open = false;
 		$('body').toggleClass('mme');
 	}
+
+	// clicks to links in main menu and navbar close the respective menus
+	// not great but whatever
+	$(document).on('click', '#main-menu a', function(){
+		$('body').toggleClass('mme');	
+	});
+
+	$('#main-navbar').on('click', 'a:not(.dropdown-toggle)', function(){
+		$scope.navbar_open = false;
+	});
 }])
 
 .controller('SocketStatusCtrl', ['$scope', 'socket', 'flare', '$timeout', function($scope, socket, flare, $timeout){
