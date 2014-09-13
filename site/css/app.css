@@ -551,11 +551,19 @@ body {
 	}
 
 #confirm-score footer button{
-	display:block;
+	display: block;
 	margin:5px 0;
 	width:100%;
 	font-weight:600;
+	padding:14px 18px;
 }
+	#confirm-score footer button:first-child{
+		margin-bottom:12px;
+	}
+	#confirm-score footer button .btn-label{
+		padding:15px;
+		margin:-15px -18px;
+	}
 
 /*
  *	Screen
