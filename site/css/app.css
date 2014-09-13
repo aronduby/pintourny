@@ -506,6 +506,7 @@ body {
 	#main-menu {
 		overflow:hidden;
 		width:0;
+		overflow-y:scroll;
 	}
 
 	.mme #main-menu, 
