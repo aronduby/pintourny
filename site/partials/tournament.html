@@ -36,9 +36,15 @@
 <div id="content-wrapper">
 
 
-	<div id="tournament" ng-hide="listTracker.active() && tournamentTracker.active()">
+	<div id="tournament" >
 
-		<div class="loading" ng-show="tournamentTracker.active()" us-spinner="{color:'#555'}"></div>
+		<!--<div class="loading" ng-show="tournamentTracker.active()" us-spinner="{color:'#555'}"></div>-->
+		<div class="loading-bride" ng-show="tournamentTracker.active()">
+			<img src="img/loading-bride.gif" />
+			<p>loading&hellip;</p>
+		</div>
+
+
 		<article ng-if="current_tournament && !tournamentTracker.active()">
 
 			<header class="page-header">			
