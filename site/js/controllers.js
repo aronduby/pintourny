@@ -158,6 +158,133 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 }])
 
 
+.controller('ScreenCtrl', 
+['$scope', '$http', '$filter', 'Restangular', 'points', 'socket', 'flare', 'promiseTracker', '$timeout',
+function($scope, $http, $filter, Restangular, points, socket, flare, promiseTracker, $timeout){
+	
+	$scope.points = points;
+	
+	$scope.listTracker = promiseTracker();
+	$scope.tournamentTracker = promiseTracker();
+	$scope.current_index = 0;
+
+	var tournaments_promise = Restangular.all('tournaments').getList()
+	.then(function(tournaments){
+		$scope.tournaments = tournaments;
+		if(tournaments.length)
+			loadTournament($scope.current_index);
+	});
+	$scope.tournamentTracker.addPromise(tournaments_promise);
+	$scope.listTracker.addPromise(tournaments_promise);
+
+	socket
+		.on('score.new', function(data){
+			console.log('screen ctrl');
+			updateScore(data);
+		})
+		.on('score.update', function(data){
+			updateScore(data);
+		})
+		.on('score.delete', function(data){
+			// check for the machine in the current tournament
+			// if its there, splice and update totals
+			// otherwise do nothing
+			var midx = _.findIndex($scope.current_tournament.machines, {id: data.machine_id});
+			if(midx >= 0){
+				var machine = $scope.current_tournament.machines[midx],
+					sidx = _.findIndex(machine.scores, {id: data.id});
+
+				machine.scores.splice(sidx, 1);
+				$scope.updateTotals();
+			}
+		});
+
+	socket.on('reconnect', function(){
+		loadTournament($scope.current_tournament.id);
+	});
+
+
+	var updateScore = function(data){
+		var msg = data.player.first_name + ' ' + data.player.last_name + ' just scored ' + $filter('number')(data.score, 0) + ' on ' + data.machine.title;
+		flare.info(msg, 5000);
+
+		// see if the machine id is in the current tournament
+		for(var i = 0 in $scope.current_tournament.machines){
+			var machine = $scope.current_tournament.machines[i];
+
+			if(machine.id == data.machine_id){				
+				var score = null;
+				for(var j = 0 in machine.scores){
+					var s = machine.scores[j];
+
+					if(s.player_id == data.player_id){
+						score = s;
+						break;
+					}
+				}
+
+				if(score == null){
+					score = {
+						id: data.id,
+						player_id: data.player_id,
+						player: data.player,
+						machine_id: data.machine_id,
+						score: 0
+					};
+					machine.scores.push(score);
+					j++;
+				}
+				score.score = Number(data.score);
+				$scope.updateTotals();
+
+				break;
+			}
+		}
+	}
+
+	var loadTournament = function(idx){
+		var promise = Restangular.one('tournaments', $scope.tournaments[idx].id).get()
+		.then(function(d){
+			$scope.current_tournament = d;
+			$scope.current_tournament.totals = {};
+			$scope.current_machine = $scope.current_tournament.machines[0];
+			$scope.updateTotals();
+
+			$timeout(function(){
+				$scope.current_index++;
+				if($scope.current_index >= $scope.tournaments.length)
+					$scope.current_index = 0;
+
+				loadTournament($scope.current_index);
+			}, 18000); // 180000 =  3 minutes
+		});
+
+		$scope.tournamentTracker.addPromise(promise);
+		return promise;
+	};
+
+	$scope.updateTotals = function(){
+		$scope.current_tournament.totals = {};
+		angular.forEach($scope.current_tournament.machines, function(machine) {
+			var i = 0;
+			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
+				if($scope.current_tournament.totals[score.player_id] == undefined){
+					$scope.current_tournament.totals[score.player_id] = {
+						player_id: score.player_id,
+						first_name: score.player.first_name,
+						last_name: score.player.last_name,
+						points: 0
+					};
+				}
+
+				$scope.current_tournament.totals[score.player_id].points += points[i];
+				i++;
+			});
+		});
+	}
+
+}])
+
 
 .controller('NavCtrl', ['$rootScope', '$scope', '$state', 'Auth', 'flare', function($rootScope, $scope, $state, Auth, flare) {
 	$scope.user = Auth.user;

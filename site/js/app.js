@@ -51,6 +51,11 @@ angular.module('myApp', [
 				url: '/',
 				templateUrl: 'partials/tournament.html',
 				controller: 'TournamentCtrl'
+			})
+			.state('public.screen', {
+				url: '/screen',
+				templateUrl: 'partials/screen.html',
+				controller: 'ScreenCtrl'
 			});
 
 		// Anonymous Routes
