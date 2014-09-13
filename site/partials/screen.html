@@ -1,0 +1,86 @@
+<div id="content-wrapper" class="screen">
+
+
+	<div id="tournament" ng-hide="listTracker.active()">
+
+		<article ng-if="current_tournament">
+
+			<header class="page-header">			
+				<div class="row">
+					<!-- Page header, center on small screens -->
+					<h1 class="col-xs-12 text-center text-left-sm"><strong>{{current_tournament.title}}</strong></h1>
+				</div>
+			</header>
+
+			<div class="machines">
+
+				<div ng-repeat="machine in current_tournament.machines" class="machine panel panel-default" data-machine-id="{{machine.id}}">
+					<header>
+						<div class="bg-cover" ng-show="machine.image.length">
+							<img ng-src="img/machines/{{machine.image}}" />
+						</div>
+						<span class="abbv">{{machine.abbv}}</span>
+						<h2>{{machine.title}}</h2>
+					</header>
+					<table class="machine-data table table-striped table-condensed">
+						<thead>
+							<tr>
+								<th class="pts">Pts.</th>
+								<th class="player">Player</th>
+								<th class="score">Score</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="score in machine.scores | orderBy:'score':true track by score.player_id" class="repeat-animation hide-fade">
+								<td class="pts">{{points[$index]}}</td>
+								<td class="player">{{score.player.first_name}} {{score.player.last_name}}</td>
+								<td class="score">{{score.score | number:0}}</td>
+							</tr>
+							<tr class="repeat-empty text-muted" ng-if="machine.scores.length == 0">
+								<td colspan="3">Quick! Get a game in, you're guarnteed 100 points right now!</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div ng-if="current_tournament.machines.length" class="machine totals panel panel-default" data-machine-id="totals">
+					<header>
+						<div class="bg-cover">
+							<img src="img/damage2.jpg" />
+						</div>
+						<span class="abbv">=</span>
+						<h2>Totals</h2>
+					</header>
+					<ul class="machine-data totals-data table table-striped table-condensed">
+						<li class="thead">
+							<span class="rank">Rank</span>
+							<span class="player">Player</span>
+							<span class="score">Points</span>
+						</li>
+						<li 
+							ng-repeat="score in current_tournament.totals | orderObjectBy:'points':true track by score.player_id"
+							ng-class="{cutoff: $index == current_tournament.cutoff}"
+							class="repeat-animation hide-fade"
+						>
+							<span class="rank">{{$index + 1}}</span>
+							<span class="player">{{score.first_name}} {{score.last_name}}</span>
+							<span class="score">{{score.points | number:0}}</span>
+						</li>
+						<li class="repeat-empty text-muted" ng-if="current_tournament.totals.length == 0">
+							no scores yet
+						</li>
+					</ul>
+				</div>
+
+			</div>
+
+		</article>
+	</div>
+
+	<div class="tag">
+		pp3.grpl.info
+	</div>
+
+	<div class="loading" ng-show="tournamentTracker.active()" us-spinner="{color:'#555'}"></div>
+
+</div>
