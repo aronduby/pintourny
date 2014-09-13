@@ -21,7 +21,7 @@
 						<select class="form-control" id="player" required 
 							ng-model="score.player"
 							ng-options="player as (player.first_name+' '+player.last_name) for player in players | orderBy:'first_name'"
-						></select>
+						><option value=""></option></select>
 					</div>
 
 					<div class="form-group">
