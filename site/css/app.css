@@ -507,6 +507,7 @@ body {
 		overflow:hidden;
 		width:0;
 		overflow-y:scroll;
+		-webkit-overflow-scroll: touch;
 	}
 
 	.mme #main-menu, 
