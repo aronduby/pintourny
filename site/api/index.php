@@ -6,23 +6,29 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-require '/web/pinballpyramid/vendor/autoload.php';
+require '/web/pintourny/vendor/autoload.php';
+
+
+try{
+	$subdomain = array_shift((explode(".",$_SERVER['HTTP_HOST'])));
+	$CC = new Config\Controller(new Config\Reader\Json('/web/pintourny/configs/'));
+	$config = $CC->load($subdomain);
+} catch(Exception $e){
+	header('Content-type: application/json');
+	http_response_code (404);
+	print json_encode([
+		'msg' => "Unknown subdomain, check your url and try again.",
+		'error' => $e->getMessage()
+	]);
+	die();
+}
 
 /* 
  *	Setup EloquentORM from Laravel
 */
 use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
-$capsule->addConnection([
-    'driver'    => 'mysql',
-    'host'      => 'localhost',
-    'database'  => 'pinballpyramid',
-    'username'  => 'pinballpyramid',
-    'password'  => 'fun2fun',
-    'charset'   => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix'    => '',
-]);
+$capsule->addConnection($config);
 
 // Set the event dispatcher used by Eloquent models... (optional)
 use Illuminate\Events\Dispatcher;
@@ -37,7 +43,7 @@ $capsule->bootEloquent();
  *	Setup Redis for PubSub for events
 */
 $redis = new Predis\Client();
-$pub = new Publisher($redis, 'pp3');
+$pub = new Publisher($redis, 'pintourny', $subdomain);
 
 
 /*
@@ -63,8 +69,11 @@ $app->add(new \SlimJson\Middleware([
 	'json.status' => true  
 ]));
 
+
+
+// Make this more useful at some point
 $app->get('/', function() use($app, $UC){
-	$app->render(200, ['data' => User\User::where('username', '=', 'aronduby')->first() ]);
+	$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
 });
 
 
@@ -73,10 +82,8 @@ $app->get('/', function() use($app, $UC){
  *	Tournaments
 */
 $app->get('/tournaments', function() use ($app){
-
-	//$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
 	$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
-});
+})->name('tournaments');
 
 $app->get('/tournaments/:id', function($id) use ($app){
 	$tournament = Tournament::with('machines.scores.player', 'machines.scores.entered_by',  'players')->where('id', '=', $id)->firstOrFail();

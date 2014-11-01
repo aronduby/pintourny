@@ -1,8 +1,8 @@
 {
     "require": {
-        "predis/predis": "*",
+        "predis/predis": "1.*",
         "aronduby/dump": "*",
-        "slim/slim": "*",
+        "slim/slim": "2.*",
         "illuminate/database": "*",
         "dogancelik/slim-json": "dev-master",
         "passwordlib/passwordlib": "dev-master"

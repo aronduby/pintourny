@@ -408,15 +408,14 @@ class ump {
 				$visibility = 'public';
 			}
 
-			$name = $property->getName();
+			if($property->isStatic())
+				$visibility .= '&nbsp;static';
 
+			$name = $property->getName();
 			if($visibility=='private' || $visibility=='protected') {
 				$property->setAccessible(true);
 			}	
 			$value = $property->getValue($data);
-
-			if($property->isStatic())
-				$visibility .= '&nbsp;static';
 
 			
 			// additional information about this property

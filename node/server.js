@@ -8,15 +8,21 @@ var redis = require("redis"),
 	});
 
 
-io.sockets.on('connection', function(socket){});
+io.sockets.on('connection', function(socket){
+	var domain = socket.handshake.headers.host,
+		sub_domain = domain.split('.').shift();
+
+	socket.join(sub_domain);
+});
 
 
 listener.on('message', function(channel, evt){
 	evt = JSON.parse(evt);
 
 	var type = evt.type,
-		data = evt.data;
+		data = evt.data,
+		room = evt.room;
 
-	io.emit(type, data);
+	io.to(room).emit(type, data);
 });
-listener.subscribe('pp3');
+listener.subscribe('pintourny');
