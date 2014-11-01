@@ -159,14 +159,15 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 
 
 .controller('ScreenCtrl', 
-['$scope', '$http', '$filter', 'Restangular', 'points', 'socket', 'flare', 'promiseTracker', '$timeout',
-function($scope, $http, $filter, Restangular, points, socket, flare, promiseTracker, $timeout){
+['$scope', '$http', '$filter', 'Restangular', 'points', 'socket', 'flare', 'promiseTracker', '$timeout', '$window',
+function($scope, $http, $filter, Restangular, points, socket, flare, promiseTracker, $timeout, $window){
 	
 	$scope.points = points;
 	
 	$scope.listTracker = promiseTracker();
 	$scope.tournamentTracker = promiseTracker();
 	$scope.current_index = 0;
+	$scope.url = $window.location.host;
 
 	var tournaments_promise = Restangular.all('tournaments').getList()
 	.then(function(tournaments){
