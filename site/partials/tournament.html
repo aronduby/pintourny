@@ -24,7 +24,7 @@
 				>
 					<a href="" ng-click="jumpToMachine(machine, $index)">{{machine.title}}</a>
 				</li>
-				<li ng-if="tournament.machines.length" ng-class="{current: current_tournament.id == tournament.id && current_index == tournament.machines.length}">
+				<li ng-if="tournament.machines.length > 1" ng-class="{current: current_tournament.id == tournament.id && current_index == tournament.machines.length}">
 					<a href="" ng-click="jumpToMachine({id: 'total', title:'Totals', tournament_id: tournament.id}, tournament.machines.length)">Totals</a>
 				</li>
 				<li ng-if="tournament.machines.length == 0" class="repeat-empty text-muted">No machines add to the tournament yet</li>
@@ -56,7 +56,6 @@
 
 			<slick 
 				class="machines"
-
 				infinite="false"
 				slides-to-show="4" 
 				slides-to-scroll="4"
@@ -76,7 +75,10 @@
 					<table class="machine-data table" ng-if="machine.scores.length > 0">
 						<thead>
 							<tr>
-								<th class="pts">Pts.</th>
+								<th class="pts">
+									<span ng-if="current_tournament.machines.length == 1">Rank</span>
+									<span ng-if="current_tournament.machines.length > 1">Pts.</span>
+								</th>
 								<th class="player">Player</th>
 								<th class="score">Score</th>
 							</tr>
@@ -86,7 +88,10 @@
 								<td class="cutoff" colspan="3">Qualified Cutoff</td>
 							</tr>
 							<tr class="repeat-animation hide-fade">
-								<td class="pts">{{points[$index]}}</td>
+								<td class="pts">
+									<span ng-if="current_tournament.machines.length == 1">{{$index+1}}</span>
+									<span ng-if="current_tournament.machines.length > 1">{{points[$index]}}</span>
+								</td>
 								<td class="player">{{score.player.first_name}} {{score.player.last_name}}</td>
 								<td class="score">{{score.score | number:0}}</td>
 							</tr>
