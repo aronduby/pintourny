@@ -34,7 +34,7 @@ class Json implements \Config\Reader{
 			}
 
 		} else {
-			throw new \Exception('Supplied file "'.$file.'" is not a file or not readable by the server');
+			throw new \InvalidArgumentException('Supplied file "'.$file.'" is not a file or not readable by the server');
 		}
 	}
 	

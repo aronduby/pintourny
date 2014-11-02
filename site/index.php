@@ -3,7 +3,19 @@
 require '/web/pintourny/vendor/autoload.php';
 $subdomain = array_shift((explode(".",$_SERVER['HTTP_HOST'])));
 $CC = new Config\Controller(new Config\Reader\Json('/web/pintourny/configs/'));
-$config = $CC->load($subdomain);
+try{
+	$config = $CC->load($subdomain);	
+} catch(InvalidArgumentException $e){
+	// subdomain doesn't exist
+	include '404.html';
+	die();
+
+} catch(Exception $e){
+	// everything else (probably bad JSON format)
+	include '500.html';
+	die();
+}
+
 ?>
 <!doctype html>
 <html lang="en" ng-app="myApp">
