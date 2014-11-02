@@ -267,6 +267,11 @@ body {
 		table-layout:fixed;
 		border-bottom:1px solid #e4e4e4;
 	}
+		/* using a tbody for repeat so tweak the striped */
+		#tournament .machine-data tbody:nth-child(odd){
+			background-color:rgb(249,249,249);
+		}
+		
 		#tournament .machine-data thead th{
 			color:#555555;
 			font-weight:bold;
@@ -287,97 +292,7 @@ body {
 	    	white-space: nowrap;
 		}
 
-	#tournament .repeat-empty td{
-		background-color: transparent;
-		padding: 2em 4em;
-		font-size: 1.3em;
-		font-weight: bold;
-	
-		text-align: center;
-}
-	
-	/* mostly faking table since we need li for cutoff */
-	#tournament .totals-data{
-		list-style:none;
-		padding:0;
-		margin:0;
-		background:#fff;
-	}
-		#tournament .totals-data li{
-			width:100%;
-			/* stupid ios */
-			display: -webkit-box;
-			display: -moz-box;
-			display: -ms-flexbox;
-			display: -webkit-flex;
-			display: flex;
-			-webkit-box-direction: normal;
-			-moz-box-direction: normal;
-			-webkit-box-orient: horizontal;
-			-moz-box-orient: horizontal;
-			-webkit-flex-direction: row;
-			-ms-flex-direction: row;
-			flex-direction: row;
-			-webkit-flex-wrap: nowrap;
-			-ms-flex-wrap: nowrap;
-			flex-wrap: nowrap;
-			-webkit-box-pack: justify;
-		    -moz-box-pack: justify;
-		    -webkit-justify-content: space-between;
-		    -ms-flex-pack: justify;
-		    justify-content: space-between
-			-webkit-align-content: stretch;
-			-ms-flex-line-pack: stretch;
-			align-content: stretch;
-		}
-			#tournament .totals-data li span{
-				padding:8px 0;
-				/* stupid ios */
-				-webkit-box-flex: 1;
-				-moz-box-flex: 1;
-				-webkit-flex: 1 1 auto;
-				-ms-flex: 1 1 auto;
-				flex: 1 1 auto;
-			}			
-			#tournament .totals-data li span.rank{
-				flex:0 0 45px;
-				/* stupid ios */
-				-webkit-box-flex: 0;
-				-moz-box-flex: 0;
-				-webkit-flex: 0 0 45px;
-				-ms-flex: 0 0 45px;
-				flex: 0 0 45px;
-			}
-			#tournament .totals-data li span:last-child{
-				padding-right:8px;
-			}
-		#tournament .totals-data li{
-			border-top:1px solid #e4e4e4;
-		}
-		#tournament .totals-data li:nth-child(even){
-			background:#f9f9f9;
-		}		
-		#tournament .totals-data li.thead{
-			background:#ebebeb;
-			font-weight:bold;
-			border-bottom:2px solid #ddd;
-		}
-	
-	#tournament .totals-data .cutoff{
-		display:block;
-	}
-		#tournament .cutoff span{ 
-			display:inline-block; 
-			vertical-align:middle;
-		}
-			#tournament .cutoff .rank{ width:40px; }
-			#tournament .cutoff .player{ width:100px; }
-			#tournament .cutoff .score{ width:170px; }
-		
-	#tournament .totals-data .cutoff::before{
-		content:'qualified cutoff';
-		display:block;
-		width:100%;
+	#tournament .machine-data .cutoff{
 		background:#e66454;
 		text-align:center;
 		color:#fff;
@@ -386,9 +301,15 @@ body {
 		font-weight:700;
 		padding:3px;
 		letter-spacing:.05em;
-		border:1px solid #c85749;
 	}
-	
+
+	#tournament .repeat-empty{
+		background-color: transparent;
+		padding: 2em 4em;
+		font-size: 1.3em;
+		font-weight: bold;	
+		text-align: center;
+	}	
 	
 	/* slick overrides */
 	#tournament .machines{
