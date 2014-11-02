@@ -13,6 +13,7 @@ io.sockets.on('connection', function(socket){
 		sub_domain = domain.split('.').shift();
 
 	socket.join(sub_domain);
+	console.log('connected');
 });
 
 
@@ -25,5 +26,4 @@ listener.on('message', function(channel, evt){
 
 	io.to(room).emit(type, data);
 });
-
 listener.subscribe('pintourny');
