@@ -28,7 +28,7 @@ try{
 */
 use Illuminate\Database\Capsule\Manager as Capsule;
 $capsule = new Capsule;
-$capsule->addConnection($config);
+$capsule->addConnection((array)$config->db);
 
 // Set the event dispatcher used by Eloquent models... (optional)
 use Illuminate\Events\Dispatcher;
@@ -72,8 +72,9 @@ $app->add(new \SlimJson\Middleware([
 
 
 // Make this more useful at some point
-$app->get('/', function() use($app, $UC){
-	$app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
+$app->get('/', function() use($app, $UC, $config){
+	// $app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
+	$app->render(200, ['data'=>$config->site]);
 });
 
 

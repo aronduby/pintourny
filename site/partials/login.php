@@ -1,3 +1,10 @@
+<?php
+// Slightly cheating to set the titles without having to dick with loading json async in the app
+require '/web/pintourny/vendor/autoload.php';
+$subdomain = array_shift((explode(".",$_SERVER['HTTP_HOST'])));
+$CC = new Config\Controller(new Config\Reader\Json('/web/pintourny/configs/'));
+$config = $CC->load($subdomain);
+?>
 <nav id="main-menu" role="navigation" ng-controller="NavCtrl">
 	<div id="main-menu-inner">
 		<div id="menu-content-demo" class="menu-content top">
@@ -73,8 +80,8 @@
 		<!-- Left side -->
 		<div class="signin-info">
 			<a href="#" class="logo">
-				<img alt="Pinball Pyramid 3" src="img/bride-logo.png" style="margin-top: -5px;">&nbsp;
-				Pinball Pyramid 3
+				<img alt="<?= $config->site->title ?>" src="img/logos/<?= $config->site->logo ?>" style="margin-top: -5px;">&nbsp;
+				<?= $config->site->title ?>
 			</a>
 			<div class="slogan">
 				Let's Play Some Pinball!

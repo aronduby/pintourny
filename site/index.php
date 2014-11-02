@@ -1,10 +1,17 @@
+<?php
+// Slightly cheating to set the titles without having to dick with loading json async in the app
+require '/web/pintourny/vendor/autoload.php';
+$subdomain = array_shift((explode(".",$_SERVER['HTTP_HOST'])));
+$CC = new Config\Controller(new Config\Reader\Json('/web/pintourny/configs/'));
+$config = $CC->load($subdomain);
+?>
 <!doctype html>
 <html lang="en" ng-app="myApp">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-	<title>Pinball Pyramid 3</title>
+	<title><?= $config->site->title ?></title>
 
 	<link rel="shortcut icon" href="favicon.ico" />
 
@@ -46,8 +53,8 @@
 			<div class="navbar-inner">
 				<div class="navbar-header">
 					<a href="#" class="navbar-brand">
-						<div><img alt="Pinball Pyramid 3" src="img/bride-logo.png"></div>
-						Pinball Pyramid 3
+						<div><img alt="<?= $config->site->title ?>" src="img/logos/<?= $config->site->logo ?>"></div>
+						<?= $config->site->title ?>
 					</a>
 					<button 
 						type="button" 

@@ -38,6 +38,7 @@
 	font-size: 22px;
 	font-weight: 700;
 	opacity: 1;
+	line-height: 1.2em;
 }
 .page-signin .signin-info .logo[href]:hover {
 	opacity: .7;
@@ -186,46 +187,52 @@
 	}
 }
 
-@media (min-width:768px) {
+@media (min-width:930px) {
 	.page-signin .signin-container {
-		display: table;
-		margin: 80px auto;
+		display: flex;
+		margin: 20px auto;
 		width: 650px;
-		table-layout: fixed;
 	}
+	
 	.page-signin .signin-info {
-		display: table-cell;
 		padding: 30px;
 		text-align: left;
-		vertical-align: top;
-		width: 40%}
-	.page-signin .signin-info ul {
-		color: #fff;
-		display: block;
-		font-size: 13px;
-		font-weight: 300;
-		margin: 30px 0 0;
-		padding: 0;
+		width: 40%;
 	}
-	.page-signin .signin-info ul li {
-		list-style: none;
-		margin: 0;
-		padding: 7px 0;
-	}
-	.page-signin .signin-info ul .signin-icon {
-		display: block;
-		float: left;
-		font-size: 14px;
-		line-height: 18px;
-		margin-right: 6px;
-		text-align: center;
-		width: 24px;
-	}
+		.page-signin .signin-info ul {
+			color: #fff;
+			display: block;
+			font-size: 13px;
+			font-weight: 300;
+			margin: 30px 0 0;
+			padding: 0;
+		}
+			.page-signin .signin-info ul li {
+				list-style: none;
+				margin: 0;
+				padding: 7px 0;
+			}
+				.page-signin .signin-info ul .signin-icon {
+					display: block;
+					float: left;
+					font-size: 14px;
+					line-height: 18px;
+					margin-right: 6px;
+					text-align: center;
+					width: 24px;
+				}
+
 	.page-signin .signin-form {
-		display: table-cell;
+		display:flex;
+		flex-direction:column;
 		vertical-align: top;
-		width: 60%}
-	.page-signin .not-a-member {
-		margin: -80px 0 80px;
+		width: 60%;
+		min-height:100%;
 	}
+		.page-signin .signin-form form{
+			flex:1;
+		}
+		.page-signin .not-a-member {
+			margin: -80px 0 80px;
+		}
 }

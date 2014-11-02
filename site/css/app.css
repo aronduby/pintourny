@@ -6,6 +6,10 @@ body {
     background-color: #fff;
 }
 
+/* overflow-hidden fix for the title (same as inline-block hack) */
+.theme-frost #main-navbar .navbar-header{
+	font-size:0;
+}
 .theme-frost #main-navbar .navbar-brand div{
 	background:none;
 }
@@ -438,6 +442,9 @@ body {
 	}
 
 /* Signin Form */
+.page-signin .signin-container{
+	border-radius:0;
+}
 .page-signin .signin-info{
 	text-align:center;
 }

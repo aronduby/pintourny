@@ -1,10 +1,16 @@
 {
-    "driver"    : "mysql",
-    "host"      : "localhost",
-    "database"  : "pinballpyramid",
-    "username"  : "pinballpyramid",
-    "password"  : "fun2fun",
-    "charset"   : "utf8",
-    "collation" : "utf8_unicode_ci",
-    "prefix"    : ""
+    "db": {
+    	"driver"    : "mysql",
+        "host"      : "localhost",
+        "database"  : "pinballpyramid",
+        "username"  : "pinballpyramid",
+        "password"  : "fun2fun",
+        "charset"   : "utf8",
+        "collation" : "utf8_unicode_ci",
+        "prefix"    : ""
+    },
+    "site": {
+    	"title": "Pinball Pyramid 3",
+    	"logo": "bride-logo.png"
+    }
 }

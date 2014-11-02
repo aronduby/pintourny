@@ -1,10 +1,16 @@
 {
-    "driver"    : "mysql",
-    "host"      : "localhost",
-    "database"  : "pt_cyclopes",
-    "username"  : "pintourny",
-    "password"  : "sammy.D3W",
-    "charset"   : "utf8",
-    "collation" : "utf8_unicode_ci",
-    "prefix"    : ""
+	"db": {
+		"driver"    : "mysql",
+		"host"      : "localhost",
+		"database"  : "pt_cyclopes",
+		"username"  : "pintourny",
+		"password"  : "sammy.D3W",
+		"charset"   : "utf8",
+		"collation" : "utf8_unicode_ci",
+		"prefix"    : ""
+	},
+	"site": {
+		"title": "Southwest Michigan Food Pantry Charity Pinball Tournament",
+		"logo": "bride-logo.png"
+	}
 }

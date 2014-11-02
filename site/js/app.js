@@ -69,7 +69,7 @@ angular.module('myApp', [
 			})
 			.state('anon.login', {
 				url: '/login',
-				templateUrl: 'partials/login.html',
+				templateUrl: 'partials/login.php',
 				controller: 'LoginCtrl'
 			});
 

@@ -15,7 +15,7 @@ class Json implements \Config\Reader{
 
 		if(is_file($file) && is_readable($file)){
 			$content = file_get_contents($file);
-			$json = json_decode($content, true);
+			$json = json_decode($content);
 			
 			if(is_null($json)){
 				// errors
