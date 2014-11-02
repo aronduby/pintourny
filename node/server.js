@@ -25,4 +25,5 @@ listener.on('message', function(channel, evt){
 
 	io.to(room).emit(type, data);
 });
+
 listener.subscribe('pintourny');
