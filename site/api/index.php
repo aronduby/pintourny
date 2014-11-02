@@ -63,7 +63,7 @@ $app = new \Slim\Slim();
 $app->add(new JsonToPost());
 $app->add(new \User\Middleware\Auth($UC, $force_hash));
 $app->add(new \SlimJson\Middleware([
-	'json.debug' => true,
+	'json.debug' => false,
 	'json.override_error' => true,
 	'json.override_notfound' => true,
 	'json.status' => true  
