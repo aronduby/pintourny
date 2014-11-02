@@ -13,7 +13,6 @@ io.sockets.on('connection', function(socket){
 		sub_domain = domain.split('.').shift();
 
 	socket.join(sub_domain);
-	console.log('ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ');
 });
 
 
