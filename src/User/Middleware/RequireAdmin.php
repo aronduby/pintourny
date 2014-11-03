@@ -14,9 +14,11 @@ class RequireAdmin{
 	}
 
 	public function __invoke(\Slim\Route $route){
-		
-		if(!$this->uc->get()->role->bit & \User\Role::ADMIN)
-			throw new \UnexpectedValueException('Must be an admin to do that', 403);
+		if(
+			!$this->uc->get()->logged_in 
+			|| !$this->uc->get()->role->bit & \User\Role::ADMIN
+		)
+			throw new \HttpStatusException('Must be an admin to do that', 403);
 
 		return true;
 	}

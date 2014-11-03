@@ -64,11 +64,22 @@ $app->add(new JsonToPost());
 $app->add(new \User\Middleware\Auth($UC, $force_hash));
 $app->add(new \SlimJson\Middleware([
 	'json.debug' => false,
-	'json.override_error' => true,
-	'json.override_notfound' => true,
-	'json.status' => true  
+	'json.status' => true,
+	'json.override_error' => false,
+	'json.override_notfound' => false
 ]));
 
+$app->error(function (\Exception $e) use ($app) {
+
+	switch(get_class($e)){
+		case 'HttpStatusException':
+			$app->render($e->getCode(), ['data' => $e->getMessage()]);
+			break;
+		default:
+			$app->render(500, ['data' => $e->getMessage()]);	
+	}
+    
+});
 
 
 // Make this more useful at some point

@@ -47,10 +47,10 @@ class Controller{
 			if($this->crypt->verifyPasswordHash($password, $user->password)){
 				return $this->loginUser($user);
 			} else {
-				throw new \InvalidArgumentException('Incorrect Password', 401);
+				throw new \HttpStatusException('Incorrect Password', 401);
 			}
 		} else {
-			throw new \InvalidArgumentException('Username not found', 401);
+			throw new \HttpStatusException('Username not found', 401);
 		}
 
 	}

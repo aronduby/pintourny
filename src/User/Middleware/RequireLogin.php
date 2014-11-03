@@ -15,7 +15,7 @@ class RequireLogin{
 
 	public function __invoke(\Slim\Route $route){
 		if(!$this->uc->get()->logged_in)
-			throw new \UnexpectedValueException('Login Required', 401);
+			throw new \HttpStatusException('Login Required', 401);
 
 		return true;
 	}
