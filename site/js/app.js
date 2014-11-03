@@ -189,15 +189,6 @@ angular.module('myApp', [
 			}
 		});
 
-		RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response) {
-			var hash = response.headers('User-Hash');
-			RestangularProvider.setDefaultHeaders({'User-Hash': hash});
-			$httpProvider.defaults.headers.common['User-Hash'] = hash;
-
-			// ditch everything minus the data
-			return data.data;
-		});
-
 		// if the element has machines[0].scores convert scores.score to an actual object
 		// that's because 32bit php sucks balls for int conversion and that's what the dev is
 		RestangularProvider.addElementTransformer('tournaments', false, function(el){
@@ -234,6 +225,18 @@ angular.module('myApp', [
 '$rootScope', '$state', 'Auth', '$location', 'flare', '$localStorage', 'Restangular', '$http',
  function ($rootScope, $state, Auth, $location, flare, $localStorage, Restangular, $http) {
 
+ 	Restangular.addResponseInterceptor(function(data, operation, what, url, response) {
+ 		var hash = response.headers('User-Hash');
+ 		if(hash){
+ 			Restangular.setDefaultHeaders({'User-Hash': hash});
+ 			$http.defaults.headers.common['User-Hash'] = hash;	
+ 			$localStorage.user_hash = hash;
+ 		}		
+
+ 		// ditch everything minus the data
+ 		return data.data;
+ 	});
+
  	if( $localStorage.user_hash != undefined ){
  		Auth.loginFromHash($localStorage.user_hash,
  			function(user){
@@ -242,15 +245,6 @@ angular.module('myApp', [
  			}, function(){}
  		);
  	}
-
- 	Restangular.addResponseInterceptor(function(data, operation, what, url, response) {
- 		var hash = response.headers('User-Hash');
- 		if(hash){
- 			var hash = response.headers('User-Hash');
- 			$localStorage.user_hash = hash;
- 		}
- 		return data;
-	});
 
 	var locationSearch = null;
 	/*
