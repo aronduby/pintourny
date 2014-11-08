@@ -4,7 +4,7 @@
 
 
 angular.module('myApp.services', [])
-.factory('Auth', ['Restangular', '$localStorage', function(Restangular, $localStorage){
+.factory('Auth', ['Restangular', '$localStorage', '$q', function(Restangular, $localStorage, $q){
 	
 	var accessLevels = routingConfig.accessLevels,
 		userRoles = routingConfig.userRoles,
@@ -31,6 +31,8 @@ angular.module('myApp.services', [])
 		user: currentUser,
 		userRoles: userRoles,
 		accessLevels: accessLevels,
+		logging_in: $q.defer(),
+		checking_hash: $q.defer(),
 
 		/*
 		 *	Check if the user has the specified access
@@ -63,14 +65,12 @@ angular.module('myApp.services', [])
 		},
 		*/
 		login: function(user, success, error) {
-			Restangular.all('users').login(user)
-			.then(
-				function(user){
-					user.role = _self.getRoleForMask(user.role.bit);
-					changeUser(user);
-					success(user);
-				}, error
-			);
+			_self.logging_in = Restangular.all('users').login(user);
+			_self.logging_in.then(function(user){
+				user.role = _self.getRoleForMask(user.role.bit);
+				changeUser(user);
+			});
+			return _self.logging_in;
 		},
 
 		loginFromHash: function(hash, success, error){
@@ -79,19 +79,27 @@ angular.module('myApp.services', [])
 				function(user){
 					user.role = _self.getRoleForMask(user.role.bit);
 					changeUser(user);
-					success(user);
-				}, error
+					_self.checking_hash.resolve(user);
+				}, function(err){
+					_self.checking_hash.reject(err);
+				}, function(msg){
+					_self.checking_hash.notify(err);
+				}
 			);
+			
+			return _self.checking_hash.promise;
 		},
 
 		logout: function(success, error){
-			currentUser.logout().then(
-				function(){
-					changeUser(defaultUser);
-					delete $localStorage.user_hash;
-					success();
-				}, error
-			);
+			var logged_out = currentUser.logout();
+			logged_out.then(function(){
+				changeUser(defaultUser);
+				delete $localStorage.user_hash;
+				_self.logging_in = $q.defer();
+				_self.checking_hash = $q.defer();
+			});
+
+			return logged_out;
 		}
 	};
 

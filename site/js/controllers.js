@@ -294,14 +294,16 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.navbar_open = false;
 
 	$scope.logout = function() {
-		Auth.logout(function() {
-			$scope.user = Auth.user;
-			$state.go('anon.login');
-			
-		}, function(err) {
-			console.log(err);
-			flare.error("Failed to logout: "+err.msg);
-		});
+		Auth.logout()
+		.then(
+			function(){
+				$scope.user = Auth.user;
+				$state.go('anon.login');
+			}, function(err){
+				console.log(err);
+				flare.error("Failed to logout: "+err.msg);
+			}
+		);
 	};
 
 	$scope.toggleMainMenu = function(){
@@ -361,10 +363,16 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 /*
  *	Used to go between the views and the AuthService
 */
-.controller('LoginCtrl', ['$rootScope', '$scope', 'Auth', '$state', 'flare',  function($rootScope, $scope, Auth, $state, flare){
+.controller('LoginCtrl', ['$rootScope', '$scope', 'Auth', '$state', 'flare', 'promiseTracker',  function($rootScope, $scope, Auth, $state, flare, promiseTracker){
+
 	$scope.user = Auth.user;
 	$scope.userRoles = Auth.userRoles;
 	$scope.accessLevels = Auth.accessLevels;
+	$scope.hash_login_tracker = promiseTracker();
+
+	$scope.hash_login_tracker.addPromise(Auth.checking_hash.promise);
+	// todo: if tracker is active, do a notification that cancels when it's complete
+	Auth.checking_hash.promise.then(success);
 
 	$scope.login_status = false;
 	$scope.username = '';
@@ -372,37 +380,39 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 
 	$scope.login = function() {
 		$scope.login_status = 'loading';
-		Auth.login(
-			{
-				username: $scope.username,
-				password: $scope.password
-			},
-			function(u){
-				$scope.login_status = true;
-				$scope.user = u;
-
-				flare.success('Success! Lets play some pinball!', 5000);
-
-				if(u.role.title == 'admin'){
-					$state.go('admin.tournaments');
-				} else {
-					$state.go('user.score');
-				}				
-			},
-			function(err){
-				$scope.login_status = false;
-				var msg = '';
-				switch(err.status){
-					case 403:
-						msg = "Looks like you're not authorized to use the system.";
-						break;
-					default:
-						msg = "Server said: '"+err.data.error+"'";
-				}
-				flare.error(msg, 10000);
-			}
-		);
+		Auth.login({
+			username: $scope.username,
+			password: $scope.password
+		}).then(success, error);
 	}
+
+	function success(u){
+		$scope.login_status = true;
+		$scope.user = u;
+
+		flare.success('Success! Lets play some pinball!', 5000);
+
+		if(u.role.title == 'admin'){
+			$state.go('admin.tournaments');
+		} else {
+			$state.go('user.score');
+		}
+	}
+
+	function error(err){
+		$scope.login_status = false;
+		var msg = '';
+		switch(err.status){
+			case 403:
+				msg = "Looks like you're not authorized to use the system.";
+				break;
+			default:
+				msg = "Server said: '"+err.data.error+"'";
+		}
+		flare.error(msg, 10000);
+	}
+
+
 }])
 
 .controller('ScoreCtrl', ['$scope', '$modal', 'Restangular', 'flare', 'promiseTracker', 'socket', function($scope, $modal, Restangular, flare, promiseTracker, socket){

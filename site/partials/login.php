@@ -75,7 +75,11 @@ $config = $CC->load($subdomain);
 		</div>
 	</header>
 
-	<div class="signin-container">
+	<div class="signin-container" ng-show="hash_login_tracker.active()">
+		<div class="loading" us-spinner="{color:'#7f8796'}"></div>
+	</div>
+
+	<div class="signin-container" ng-hide="hash_login_tracker.active()">
 
 		<!-- Left side -->
 		<div class="signin-info">

@@ -233,17 +233,19 @@ angular.module('myApp', [
  			$localStorage.user_hash = hash;
  		}		
 
- 		// ditch everything minus the data
  		return data.data;
  	});
 
  	if( $localStorage.user_hash != undefined ){
- 		Auth.loginFromHash($localStorage.user_hash,
+ 		Auth.loginFromHash($localStorage.user_hash)
+ 		.then(
  			function(user){
  				$http.defaults.headers.common['User-Hash'] = $localStorage.user_hash;
  				Restangular.setDefaultHeaders({'User-Hash': $localStorage.user_hash});
- 			}, function(){}
+	 		}
  		);
+ 	} else {
+ 		Auth.checking_hash.reject();
  	}
 
 	var locationSearch = null;
