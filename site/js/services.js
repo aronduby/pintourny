@@ -106,12 +106,73 @@ angular.module('myApp.services', [])
 	return _self;
 }])
 .factory('socket', ['$rootScope', '$window', function($rootScope, $window) {
+
+	// Setup socket.io as normal
 	var addr = 'http://'+$window.location.hostname+':773';
 	var socket = io(addr,{
 		'sync disconnect on unload': true,
 		'reconnectionAttempts': 5
 	});
 
+	/*
+	 *	Create scoped objects which correspond to controllers scopes
+	 *	this allows us to easily remove events for a controllers scope when it gets destroyed
+	*/
+	var scopes = {};
+	function Scope(id){
+		this.id = id;
+		this.events = {};
+		scopes[id] = this;
+	}
+	Scope.prototype.on = function(e, handler){
+		if(this.events[e] == undefined){
+			this.events[e] = [];
+		}
+		var wrapped_handler = wrapHandler(handler); 
+		this.events[e].push(wrapped_handler);
+		addListener(e, wrapped_handler);
+		return this;
+	}
+	Scope.prototype.clear = function(){
+		// loop through all of our events and removeListener
+		var keys = Object.keys(this.events);
+		for(var i=0; i<keys.length; ++i){
+			var e = keys[i],
+				handlers = this.events[e];
+		    
+		    for(var j=0; j<handlers.length; ++j){
+		    	socket.removeListener(e, handlers[j]);
+		    }
+		}
+	}
+
+	/*
+	 *	Since we can remove things now we have to be able to have a reference to the actual function
+	 *	since we have to use $rootScope.apply to bring the functions into "Angular Land" we can't just
+	 *	use the bare handler, so this function will wrap the supplied handler with the proper Angular
+	 *	code and return that function, which can be stored and used with removeListener
+	*/
+	function wrapHandler(handler){
+		return function() {
+			var args = arguments;
+			$rootScope.$apply(function() {
+				handler.apply(null, args);
+			});
+		}
+	}
+
+	/*
+	 *	This actually adds the event listener to the socket. Make sure the handler has already been
+	 *	wraped using the wrapHandler() function above
+	*/
+	function addListener(e, wrapped_handler){
+		socket.on(e, wrapped_handler);
+	}
+
+
+	/*
+	 *	Go between object which actually gets returned
+	*/
 	var glue = {
 		emit: function() {
 			var args = Array.prototype.slice.call(arguments);
@@ -131,13 +192,24 @@ angular.module('myApp.services', [])
 		},
 
 		on: function(e, handler) {
-			socket.on(e, function() {
-				var args = arguments;
-				$rootScope.$apply(function() {
-					handler.apply(null, args);
-				});
-			});
+			addListener(e, wrapHandler(handler));
 			return this;
+		},
+
+		addScope: function(id){
+			var scope  = glue.getScope(id);
+			if(scope == false){
+				scope = new Scope(id);
+			}
+			return scope;
+		},
+
+		getScope: function(id){
+			if(scopes[id]){
+				return scopes[id];
+			} else {
+				return false;
+			}
 		}
 	};
 

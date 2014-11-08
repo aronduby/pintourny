@@ -25,51 +25,72 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 
 	$scope.breakpoints = [
 	  {
-	    breakpoint: 1400,
-	    settings: {
-	      slidesToShow: 3,
-	      slidesToScroll: 3
-	    }
+		breakpoint: 1400,
+		settings: {
+		  slidesToShow: 3,
+		  slidesToScroll: 3
+		}
 	  }, {
-	  	breakpoint: 1150,
-	  	settings: {
-	  		slidesToShow: 2,
-	  		slidesToScroll: 2
-	  	}
+		breakpoint: 1150,
+		settings: {
+			slidesToShow: 2,
+			slidesToScroll: 2
+		}
 	  }, {
-	    breakpoint: 900,
-	    settings: {
-	      slidesToShow: 1,
-	      slidesToScroll: 1
-	    }
+		breakpoint: 900,
+		settings: {
+		  slidesToShow: 1,
+		  slidesToScroll: 1
+		}
 	  }
 	];
 
-	socket
-		.on('score.new', function(data){
-			updateScore(data);
-		})
-		.on('score.update', function(data){
-			updateScore(data);
-		})
-		.on('score.delete', function(data){
-			// check for the machine in the current tournament
-			// if its there, splice and update totals
-			// otherwise do nothing
-			var midx = _.findIndex($scope.current_tournament.machines, {id: data.machine_id});
-			if(midx >= 0){
-				var machine = $scope.current_tournament.machines[midx],
-					sidx = _.findIndex(machine.scores, {id: data.id});
+	$scope.jumpToMachine = function(machine, index){
+		if(machine.tournament_id != $scope.current_tournament.id){
+			loadTournament(machine.tournament_id)
+			.then(function(){
+				$scope.current_index = index;
+			})
+		} else {
+			$scope.current_index = index;
+			$scope.highlight_nav = index;
+		}
+	}
 
-				machine.scores.splice(sidx, 1);
-				$scope.updateTotals();
-			}
+	$scope.updateTotals = function(){
+		$scope.current_tournament.totals = {};
+		angular.forEach($scope.current_tournament.machines, function(machine) {
+			var i = 0;
+			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
+				if($scope.current_tournament.totals[score.player_id] == undefined){
+					$scope.current_tournament.totals[score.player_id] = {
+						player_id: score.player_id,
+						first_name: score.player.first_name,
+						last_name: score.player.last_name,
+						points: 0
+					};
+				}
+
+				$scope.current_tournament.totals[score.player_id].points += points[i];
+				i++;
+			});
+		});
+	}
+
+
+	var loadTournament = function(tournament_id){
+		var promise = Restangular.one('tournaments', tournament_id).get()
+		.then(function(d){
+			$scope.current_tournament = d;
+			$scope.current_tournament.totals = {};
+			$scope.current_machine = $scope.current_tournament.machines[0];
+			$scope.updateTotals();
+			$scope.current_index = 0;
 		});
 
-	socket.on('reconnect', function(){
-		loadTournament($scope.current_tournament.id);
-	});
-
+		$scope.tournamentTracker.addPromise(promise);
+		return promise;
+	};
 
 	var updateScore = function(data){
 		var msg = data.player.first_name + ' ' + data.player.last_name + ' just scored ' + $filter('number')(data.score, 0) + ' on ' + data.machine.title;
@@ -107,53 +128,34 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 				break;
 			}
 		}
-	}
-
-	$scope.jumpToMachine = function(machine, index){
-		if(machine.tournament_id != $scope.current_tournament.id){
-			loadTournament(machine.tournament_id)
-			.then(function(){
-				$scope.current_index = index;
-			})
-		} else {
-			$scope.current_index = index;
-			$scope.highlight_nav = index;
-		}
-	}
-
-	var loadTournament = function(tournament_id){
-		var promise = Restangular.one('tournaments', tournament_id).get()
-		.then(function(d){
-			$scope.current_tournament = d;
-			$scope.current_tournament.totals = {};
-			$scope.current_machine = $scope.current_tournament.machines[0];
-			$scope.updateTotals();
-			$scope.current_index = 0;
-		});
-
-		$scope.tournamentTracker.addPromise(promise);
-		return promise;
 	};
 
-	$scope.updateTotals = function(){
-		$scope.current_tournament.totals = {};
-		angular.forEach($scope.current_tournament.machines, function(machine) {
-			var i = 0;
-			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
-				if($scope.current_tournament.totals[score.player_id] == undefined){
-					$scope.current_tournament.totals[score.player_id] = {
-						player_id: score.player_id,
-						first_name: score.player.first_name,
-						last_name: score.player.last_name,
-						points: 0
-					};
-				}
+	var deleteScore = function(data){
+		// check for the machine in the current tournament
+		// if its there, splice and update totals
+		// otherwise do nothing
+		var midx = _.findIndex($scope.current_tournament.machines, {id: data.machine_id});
+		if(midx >= 0){
+			var machine = $scope.current_tournament.machines[midx],
+				sidx = _.findIndex(machine.scores, {id: data.id});
 
-				$scope.current_tournament.totals[score.player_id].points += points[i];
-				i++;
-			});
+			machine.scores.splice(sidx, 1);
+			$scope.updateTotals();
+		}
+	};
+
+	socket.addScope($scope.$id)
+		.on('score.new', updateScore)
+		.on('score.update', updateScore)
+		.on('score.delete', deleteScore)
+		.on('reconnect', function(){
+			loadTournament($scope.current_tournament.id);
 		});
-	}
+
+
+	$scope.$on("$destroy", function() {
+		socket.getScope($scope.$id).clear();
+	});	
 
 }])
 
@@ -178,32 +180,25 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.tournamentTracker.addPromise(tournaments_promise);
 	$scope.listTracker.addPromise(tournaments_promise);
 
-	socket
-		.on('score.new', function(data){
-			console.log('screen ctrl');
-			updateScore(data);
-		})
-		.on('score.update', function(data){
-			updateScore(data);
-		})
-		.on('score.delete', function(data){
-			// check for the machine in the current tournament
-			// if its there, splice and update totals
-			// otherwise do nothing
-			var midx = _.findIndex($scope.current_tournament.machines, {id: data.machine_id});
-			if(midx >= 0){
-				var machine = $scope.current_tournament.machines[midx],
-					sidx = _.findIndex(machine.scores, {id: data.id});
+	$scope.updateTotals = function(){
+		$scope.current_tournament.totals = {};
+		angular.forEach($scope.current_tournament.machines, function(machine) {
+			var i = 0;
+			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
+				if($scope.current_tournament.totals[score.player_id] == undefined){
+					$scope.current_tournament.totals[score.player_id] = {
+						player_id: score.player_id,
+						first_name: score.player.first_name,
+						last_name: score.player.last_name,
+						points: 0
+					};
+				}
 
-				machine.scores.splice(sidx, 1);
-				$scope.updateTotals();
-			}
+				$scope.current_tournament.totals[score.player_id].points += points[i];
+				i++;
+			});
 		});
-
-	socket.on('reconnect', function(){
-		loadTournament($scope.current_tournament.id);
-	});
-
+	};	
 
 	var updateScore = function(data){
 		var msg = data.player.first_name + ' ' + data.player.last_name + ' just scored ' + $filter('number')(data.score, 0) + ' on ' + data.machine.title;
@@ -241,6 +236,20 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 				break;
 			}
 		}
+	};
+
+	var deleteScore = function(data){
+		// check for the machine in the current tournament
+		// if its there, splice and update totals
+		// otherwise do nothing
+		var midx = _.findIndex($scope.current_tournament.machines, {id: data.machine_id});
+		if(midx >= 0){
+			var machine = $scope.current_tournament.machines[midx],
+				sidx = _.findIndex(machine.scores, {id: data.id});
+
+			machine.scores.splice(sidx, 1);
+			$scope.updateTotals();
+		}
 	}
 
 	var loadTournament = function(idx){
@@ -264,25 +273,17 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 		return promise;
 	};
 
-	$scope.updateTotals = function(){
-		$scope.current_tournament.totals = {};
-		angular.forEach($scope.current_tournament.machines, function(machine) {
-			var i = 0;
-			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
-				if($scope.current_tournament.totals[score.player_id] == undefined){
-					$scope.current_tournament.totals[score.player_id] = {
-						player_id: score.player_id,
-						first_name: score.player.first_name,
-						last_name: score.player.last_name,
-						points: 0
-					};
-				}
-
-				$scope.current_tournament.totals[score.player_id].points += points[i];
-				i++;
-			});
+	socket.addScope($scope.$id)
+		.on('score.new', updateScore)
+		.on('score.update', updateScore)
+		.on('score.delete', deleteScore)
+		.on('reconnect', function(){
+			loadTournament($scope.current_tournament.id);
 		});
-	}
+
+	$scope.$on("$destroy", function() {
+		socket.getScope($scope.$id).clear();
+	});	
 
 }])
 
@@ -453,20 +454,6 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 		}
 	});
 
-	// handle player changes
-	socket
-		.on('player.new', function(data){
-			$scope.players.push( Restangular.restangularizeElement('', data, 'players') );
-		})
-		.on('player.update', function(data){
-			var pidx = _.findIndex($scope.players, {id: data.id});
-			$scope.players[pidx] = data;
-		})
-		.on('player.delete', function(data){
-			var pidx = _.findIndex($scope.players, {id: data.id});
-			$scope.players.splice(pidx, 1);
-		});
-
 	$scope.confirm = function(){
 		var confirm = $modal.open({
 			templateUrl: 'partials/user/modals/confirm-score.html',
@@ -489,17 +476,39 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.cancel = function(){
 		$scope.score = {};
 	}
+
+	// handle player changes
+	socket.addScope($scope.$id)
+		.on('player.new', function(data){
+			$scope.players.push( Restangular.restangularizeElement('', data, 'players') );
+		})
+		.on('player.update', function(data){
+			var pidx = _.findIndex($scope.players, {id: data.id});
+			$scope.players[pidx] = data;
+		})
+		.on('player.delete', function(data){
+			var pidx = _.findIndex($scope.players, {id: data.id});
+			$scope.players.splice(pidx, 1);
+		});
+
+	$scope.$on("$destroy", function() {
+		socket.getScope($scope.$id).clear();
+	});	
 }])
 
 .controller('AdminUserLoginOutMsgCtrl', ['$scope', 'flare', 'socket', function($scope, flare, socket){
 	
-	socket
+	socket.addScope($scope.$id)
 		.on('user.login', function(data){
 			flare.warn(data.username + ' logged in', 3000);
 		})
 		.on('user.logout', function(data){
 			flare.warn(data.username + ' logged out', 3000);
 		});
+
+	$scope.$on("$destroy", function() {
+		socket.getScope($scope.$id).clear();
+	});
 }])
 
 .controller('AdminTournamentsCtrl', ['$scope', '$modal', 'Restangular', 'flare', 'promiseTracker', function($scope, $modal, Restangular, flare, promiseTracker){
