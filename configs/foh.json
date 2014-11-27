@@ -1,0 +1,16 @@
+{
+	"db": {
+		"driver"    : "mysql",
+		"host"      : "localhost",
+		"database"  : "pt_foh",
+		"username"  : "pintourny",
+		"password"  : "sammy.D3W",
+		"charset"   : "utf8",
+		"collation" : "utf8_unicode_ci",
+		"prefix"    : ""
+	},
+	"site": {
+		"title": "Flip Off Hunger",
+		"logo": "bride-logo.png"
+	}
+}
