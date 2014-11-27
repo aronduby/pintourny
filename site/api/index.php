@@ -85,7 +85,7 @@ $app->error(function (\Exception $e) use ($app) {
 // Make this more useful at some point
 $app->get('/', function() use($app, $UC, $config){
 	// $app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
-	$app->render(200, ['data'=>$config->site]);
+	// $app->render(200, ['data'=>$config->site]);
 });
 
 
