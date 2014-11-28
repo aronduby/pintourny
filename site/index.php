@@ -7,11 +7,13 @@ try{
 	$config = $CC->load($subdomain);	
 } catch(InvalidArgumentException $e){
 	// subdomain doesn't exist
+	error_log($e->getMessage());
 	include '404.html';
 	die();
 
 } catch(Exception $e){
 	// everything else (probably bad JSON format)
+	error_log($e->getMessage());
 	include '500.html';
 	die();
 }
