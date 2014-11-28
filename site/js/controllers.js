@@ -102,7 +102,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 
 			if(machine.id == data.machine_id){				
 				var score = null;
-				for(var j = 0 in machine.scores){
+				for(var j in machine.scores){
 					var s = machine.scores[j];
 
 					if(s.player_id == data.player_id){
