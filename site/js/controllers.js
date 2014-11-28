@@ -97,7 +97,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 		flare.info(msg, 5000);
 
 		// see if the machine id is in the current tournament
-		for(var i = 0 in $scope.current_tournament.machines){
+		for(var i in $scope.current_tournament.machines){
 			var machine = $scope.current_tournament.machines[i];
 
 			if(machine.id == data.machine_id){				
@@ -205,12 +205,12 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 		flare.info(msg, 5000);
 
 		// see if the machine id is in the current tournament
-		for(var i = 0 in $scope.current_tournament.machines){
+		for(var i in $scope.current_tournament.machines){
 			var machine = $scope.current_tournament.machines[i];
 
 			if(machine.id == data.machine_id){				
 				var score = null;
-				for(var j = 0 in machine.scores){
+				for(var j in machine.scores){
 					var s = machine.scores[j];
 
 					if(s.player_id == data.player_id){
