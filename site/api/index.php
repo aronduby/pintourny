@@ -76,7 +76,8 @@ $app->error(function (\Exception $e) use ($app) {
 			$app->render($e->getCode(), ['data' => $e->getMessage()]);
 			break;
 		default:
-			$app->render(500, ['data' => $e->getMessage()]);	
+			$app->render(500, ['data' => $e->getMessage()]);
+			error_log('Caught '.$e);
 	}
     
 });
@@ -86,8 +87,12 @@ $app->error(function (\Exception $e) use ($app) {
 $app->get('/', function() use($app, $UC, $config){
 	// $app->render(200, ['data' => Tournament::with('machines', 'machines', 'players')->get() ]);
 	// $app->render(200, ['data'=>$config->site]);
+	throw new HttpStatusException('This route not implemented', 501);
 });
 
+$app->get('/exception', function(){
+	throw new Exception('Test Exception');
+});
 
 
 /*
