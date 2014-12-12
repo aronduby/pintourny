@@ -10,12 +10,12 @@
 				<div class="img-bg">
 					<div
 						ng-repeat="machine in tournament.machines" 
-      					ng-if="machine.image.length > 0"
-      				>
-      					<img ng-src="img/machines/{{machine.image}}" />
-      				</div>
-      			</div>
-      			<h1><a href="" ng-click="jumpToMachine({tournament_id: tournament.id}, 0)" class="tournament-title"><span>{{tournament.title}}</span></a></h1>
+						ng-if="machine.image.length > 0"
+					>
+						<img ng-src="img/machines/{{machine.image}}" />
+					</div>
+				</div>
+				<h1><a href="" ng-click="jumpToMachine({tournament_id: tournament.id}, 0)" class="tournament-title"><span>{{tournament.title}}</span></a></h1>
 			</header>
 			<ul class="navigation" ng-hide="listTracker.active()">
 				<li 
@@ -72,31 +72,51 @@
 						<span class="abbv">{{machine.abbv}}</span>
 						<h2>{{machine.title}}</h2>
 					</header>
-					<table class="machine-data table" ng-if="machine.scores.length > 0">
-						<thead>
-							<tr>
-								<th class="pts">
-									<span ng-if="current_tournament.machines.length == 1">Rank</span>
-									<span ng-if="current_tournament.machines.length > 1">Pts.</span>
-								</th>
-								<th class="player">Player</th>
-								<th class="score">Score</th>
-							</tr>
-						</thead>
-						<tbody ng-repeat="score in machine.scores | orderBy:'score':true track by score.player_id">
-							<tr ng-if="current_tournament.machines.length == 1 && $index == current_tournament.cutoff">
-								<td class="cutoff" colspan="3">Qualified Cutoff</td>
-							</tr>
-							<tr class="repeat-animation hide-fade">
-								<td class="pts">
-									<span ng-if="current_tournament.machines.length == 1">{{$index+1}}</span>
-									<span ng-if="current_tournament.machines.length > 1">{{points[$index]}}</span>
-								</td>
-								<td class="player">{{score.player.first_name}} {{score.player.last_name}}</td>
-								<td class="score">{{score.score | number:0}}</td>
-							</tr>
-						</tbody>
-					</table>
+
+					<div class="machine-data" ng-if="machine.scores.length > 0">
+						<ul class="list-head">
+							<li>
+								<span ng-if="current_tournament.machines.length == 1" class="pts">Rank</span>
+								<span ng-if="current_tournament.machines.length > 1" class="pts">Pts.</span>
+								<span class="player">Player</span>
+								<span class="score">Score</span>
+							</li>
+						</ul>
+						<ul
+							class="list" 
+							ng-style="{height: ((machine.scores.length * 36) + (current_tournament.machines.length == 1 ? 18 : 0) + 'px')}"
+						>
+							<li 
+								ng-repeat="score in machine.scores track by score.player_id"
+								ng-style="{
+									'transform': 'translate(0px,' + (score.order * 36) + 'px)', 
+									'z-index': machine.scores.length - score.order
+								}" 
+								ng-class="{
+									'odd': score.order % 2, 
+									'not-qualified': current_tournament.machines.length == 1 && score.order >= current_tournament.cutoff,
+									'moving': score.moving == true
+								}"
+								data-index="{{$index}}"
+							>
+								<span class="pts">
+									<span ng-if="current_tournament.machines.length == 1">{{score.order+1}}</span>
+									<span ng-if="current_tournament.machines.length > 1">{{points[score.order]}}</span>
+								</span
+								><span class="player">{{score.player.first_name}} {{score.player.last_name}}</span
+								><span class="score">{{score.score | number:0}}</span>
+							</li>
+
+							<li 
+								class="cutoff"
+								ng-if="current_tournament.machines.length == 1"
+								ng-style="{'top': (scores.length >= current_tournament.cutoff ? (36 * current_tournament.cutoff)+'px' : (scores.length * 36)+'px')}"
+							>
+								Qualified Cutoff
+							</li>
+						</ul>
+					</div>
+
 					<div ng-if="machine.scores.length == 0" class="repeat-empty text-muted">
 						Quick! Get a game in, you're guaranteed 100 points right now!
 					</div>
@@ -110,25 +130,51 @@
 						<span class="abbv">=</span>
 						<h2>Totals</h2>
 					</header>
-					<table class="machine-data totals-data table">
-						<thead>
-							<tr>
-								<th class="rank">Rank</th>
-								<th class="player">Player</th>
-								<th class="score">Points</th>
-							</tr>
-						</thead>
-						<tbody ng-repeat="score in current_tournament.totals | orderObjectBy:'points':true track by score.player_id">
-							<tr ng-if="$index == current_tournament.cutoff">
-								<td class="cutoff" colspan="3">Qualified Cutoff</td>
-							</tr>
-							<tr class="repeat-animation hide-fade">
-								<td class="pts">{{$index+1}}</td>
-								<td class="player">{{score.first_name}} {{score.last_name}}</td>
-								<td class="score">{{score.points | number:0}}</td>
-							</tr>
-						</tbody>
-					</table>
+
+					<div class="machine-data totals-data">
+						<ul class="list-head">
+							<li>
+								<span class="rank">Rank</span>
+								<span class="player">Player</span>
+								<span class="score">Points</span>
+							</li>
+						</ul>
+						<ul
+							class="list" 
+							ng-style="{height: ((current_tournament.totals.scores.length * 36) + 18 + 'px')}"
+						>
+							<li 
+								ng-repeat="score in current_tournament.totals.scores track by score.player_id"
+								ng-style="{
+									'transform': 'translate(0px,' + (score.order * 36) + 'px)', 
+									'z-index': current_tournament.totals.scores.length - score.order
+								}" 
+								ng-class="{
+									'odd': score.order % 2, 
+									'not-qualified': score.order >= current_tournament.cutoff,
+									'moving': score.moving == true
+								}"
+								data-index="{{$index}}"
+							>
+								<span class="pts">{{score.order+1}}</span
+								><span class="player">{{score.first_name}} {{score.last_name}}</span
+								><span class="score">{{score.score | number:0}}</span>
+							</li>
+
+							<li 
+								class="cutoff"
+								ng-style="{
+									'top': (
+										current_tournament.totals.scores.length >= current_tournament.cutoff 
+											? (36 * current_tournament.cutoff)+'px' 
+											: (current_tournament.totals.scores.length * 36)+'px'
+									)
+								}"
+							>
+								Qualified Cutoff
+							</li>
+						</ul>
+					</div>
 					<div class="repeat-empty text-muted" ng-if="current_tournament.totals.length == 0">
 						No scores entered yet
 					</div>

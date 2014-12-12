@@ -262,45 +262,84 @@ body {
 			z-index:3;
 		}
 
-	#tournament .machine-data{
+	#tournament .machine-data,
+	#tournament .machine-data ul{
+		position:relative;
 		width:100%;
-		table-layout:fixed;
-		border-bottom:1px solid #e4e4e4;
+		list-style:none;
+		padding:0;
+		margin:0;
 	}
-		/* using a tbody for repeat so tweak the striped */
-		#tournament .machine-data tbody:nth-child(odd){
-			background-color:rgb(249,249,249);
-		}
 		
-		#tournament .machine-data thead th{
+		#tournament .machine-data li{
+			display:flex;
+			justify-content:space-between;
+			align-items:center;
+			height:36px;
+			border-bottom:2px solid rgb(228,228,228);
+		}
+			#tournament .machine-data li > span{
+				padding:8px;
+			}
+			#tournament .machine-data .rank,
+			#tournament .machine-data .pts{
+				text-align:center;
+				flex:1 0 12%;
+			}		
+
+			#tournament .machine-data .player{
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				flex:2 1 43%;
+			}
+
+			#tournament .machine-data .score{
+				text-align:right;
+				flex:2 0 45%;
+			}
+
+		#tournament .machine-data .list-head{
 			color:#555555;
 			font-weight:bold;
 			background:#ebebeb;
 		}
-		#tournament .machine-data .rank,
-		#tournament .machine-data .pts{
-			width:40px;
-			text-align:center;
-		}		
-		#tournament .machine-data .score{
-			text-align:right;
-		}		
-		#tournament .machine-data .player{
-	    	max-width: 100px;
-	    	overflow: hidden;
-	    	text-overflow: ellipsis;
-	    	white-space: nowrap;
-		}
 
-	#tournament .machine-data .cutoff{
+		#tournament .machine-data .list li{
+			position:absolute;
+        	top:0;
+        	left:0;
+        	width:100%;
+        	background:#fff;
+	    	-webkit-transition: all .5s ease-in-out;
+	    	-moz-transition: all .5s ease-in-out;
+	    	transition: all .5s ease-in-out;
+        	transition-property: background, transform, box-shadow, color;
+		}
+			#tournament .machine-data .list li.odd{
+				background-color:rgb(249,249,249);
+			}
+
+			#tournament .machine-data li.not-qualified{
+				margin-top:18px;
+			}
+
+			#tournament .machine-data li.moving{
+    			box-shadow:0 0 2px rgba(0,0,0,.5);
+			}			
+
+	#tournament .machine-data .list li.cutoff{
+		display:block;
 		background:#e66454;
 		text-align:center;
 		color:#fff;
 		text-transform:uppercase;
-		font-size:8px;
+		font-size: 9px;
 		font-weight:700;
 		padding:3px;
 		letter-spacing:.05em;
+		height:auto;
+		border:none;
 	}
 
 	#tournament .repeat-empty{
@@ -555,31 +594,10 @@ body {
 		#content-wrapper.screen .machines .machine:first-child{
 			margin-left:0;
 		}
-		#content-wrapper.screen .machines .machine:first-child{
-			margin-left:0;
-		}
 	
-		#content-wrapper.screen .machines .machine thead,
-		#content-wrapper.screen .machines .machine .thead{
+		#content-wrapper.screen .machines .machine .list-head{
 			display:none;
 		}
-		
-		 #content-wrapper.screen .totals-data span{
-			 padding:5px 0;
-		 }
-		 
-		 #content-wrapper.screen .totals-data .cutoff{
-			 border-top:2px solid #E66454;
-		 }
-		 #content-wrapper.screen .totals-data .cutoff::before{
-			 display:none;
-			 content:'';
-			 padding:0;
-		 }
-		 
-		 #content-wrapper.screen .totals-data .cutoff .score{
-			 width:68px;
-		 }
 		 
 		 #content-wrapper.screen .tag{
 			 position:fixed;

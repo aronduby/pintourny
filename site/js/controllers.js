@@ -4,9 +4,9 @@
 
 angular.module('myApp.controllers', [])
 .controller('TournamentCtrl', 
-['$scope', '$http', '$filter', 'Restangular', 'points', 'socket', 'flare', 'promiseTracker',
+['$scope', '$http', '$filter', 'Restangular', 'points', 'socket', 'flare', 'promiseTracker', 
 function($scope, $http, $filter, Restangular, points, socket, flare, promiseTracker){
-	
+
 	$scope.points = points;
 	
 	$scope.listTracker = promiseTracker();
@@ -58,24 +58,40 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	}
 
 	$scope.updateTotals = function(){
-		$scope.current_tournament.totals = {};
+		$scope.current_tournament.totals = {
+			scores: []
+		};
 		angular.forEach($scope.current_tournament.machines, function(machine) {
 			var i = 0;
-			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
-				if($scope.current_tournament.totals[score.player_id] == undefined){
-					$scope.current_tournament.totals[score.player_id] = {
+			angular.forEach($filter('orderBy')(machine.scores, 'order', true), function(score){
+				var s = _.findWhere($scope.current_tournament.totals.scores, {player_id: score.player_id});
+				if(s == undefined){
+					s = {
 						player_id: score.player_id,
 						first_name: score.player.first_name,
 						last_name: score.player.last_name,
-						points: 0
+						score: 0
 					};
+					$scope.current_tournament.totals.scores.push(s);
 				}
 
-				$scope.current_tournament.totals[score.player_id].points += points[i];
+				s.score += points[score.order];
 				i++;
 			});
 		});
+		$scope.setOrder($scope.current_tournament.totals);
 	}
+
+	$scope.setOrder = function (machine) {
+		function compare(a,b) {
+			// sorting in reverse order
+			return b.score - a.score;
+		}
+
+		machine.scores.slice().sort(compare).forEach(function(o, i) {
+			o.order = i;
+		});
+	};
 
 
 	var loadTournament = function(tournament_id){
@@ -84,8 +100,13 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 			$scope.current_tournament = d;
 			$scope.current_tournament.totals = {};
 			$scope.current_machine = $scope.current_tournament.machines[0];
-			$scope.updateTotals();
 			$scope.current_index = 0;
+			
+			angular.forEach($scope.current_tournament.machines, function(machine){
+				$scope.setOrder(machine);
+			});
+
+			$scope.updateTotals();
 		});
 
 		$scope.tournamentTracker.addPromise(promise);
@@ -123,6 +144,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 					j++;
 				}
 				score.score = Number(data.score);
+				$scope.setOrder(machine);
 				$scope.updateTotals();
 
 				break;
@@ -140,6 +162,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 				sidx = _.findIndex(machine.scores, {id: data.id});
 
 			machine.scores.splice(sidx, 1);
+			$scope.setOrder(machine);
 			$scope.updateTotals();
 		}
 	};
@@ -168,6 +191,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	
 	$scope.listTracker = promiseTracker();
 	$scope.tournamentTracker = promiseTracker();
+	
 	$scope.current_index = 0;
 	$scope.url = $window.location.host;
 
@@ -181,24 +205,40 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 	$scope.listTracker.addPromise(tournaments_promise);
 
 	$scope.updateTotals = function(){
-		$scope.current_tournament.totals = {};
+		$scope.current_tournament.totals = {
+			scores: []
+		};
 		angular.forEach($scope.current_tournament.machines, function(machine) {
 			var i = 0;
-			angular.forEach($filter('orderBy')(machine.scores, 'score', true), function(score){
-				if($scope.current_tournament.totals[score.player_id] == undefined){
-					$scope.current_tournament.totals[score.player_id] = {
+			angular.forEach($filter('orderBy')(machine.scores, 'order', true), function(score){
+				var s = _.findWhere($scope.current_tournament.totals.scores, {player_id: score.player_id});
+				if(s == undefined){
+					s = {
 						player_id: score.player_id,
 						first_name: score.player.first_name,
 						last_name: score.player.last_name,
-						points: 0
+						score: 0
 					};
+					$scope.current_tournament.totals.scores.push(s);
 				}
 
-				$scope.current_tournament.totals[score.player_id].points += points[i];
+				s.score += points[score.order];
 				i++;
 			});
 		});
-	};	
+		$scope.setOrder($scope.current_tournament.totals);
+	}
+
+	$scope.setOrder = function (machine) {
+		function compare(a,b) {
+			// sorting in reverse order
+			return b.score - a.score;
+		}
+
+		machine.scores.slice().sort(compare).forEach(function(o, i) {
+			o.order = i;
+		});
+	};
 
 	var updateScore = function(data){
 		var msg = data.player.first_name + ' ' + data.player.last_name + ' just scored ' + $filter('number')(data.score, 0) + ' on ' + data.machine.title;
@@ -231,6 +271,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 					j++;
 				}
 				score.score = Number(data.score);
+				$scope.setOrder(machine);
 				$scope.updateTotals();
 
 				break;
@@ -248,6 +289,7 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 				sidx = _.findIndex(machine.scores, {id: data.id});
 
 			machine.scores.splice(sidx, 1);
+			$scope.setOrder(machine);
 			$scope.updateTotals();
 		}
 	}
@@ -258,6 +300,11 @@ function($scope, $http, $filter, Restangular, points, socket, flare, promiseTrac
 			$scope.current_tournament = d;
 			$scope.current_tournament.totals = {};
 			$scope.current_machine = $scope.current_tournament.machines[0];
+
+			angular.forEach($scope.current_tournament.machines, function(machine){
+				$scope.setOrder(machine);
+			});
+
 			$scope.updateTotals();
 
 			$timeout(function(){
