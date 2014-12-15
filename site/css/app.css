@@ -272,8 +272,14 @@ body {
 	}
 		
 		#tournament .machine-data li{
+			display: -webkit-flex;
+			display: -ms-flex;
 			display:flex;
+			-webkit-justify-content: space-between;
+   			-ms-flex-pack: justify;
 			justify-content:space-between;
+			-webkit-align-items:center;
+			-ms-align-items:center;
 			align-items:center;
 			height:36px;
 			border-bottom:2px solid rgb(228,228,228);
@@ -284,6 +290,8 @@ body {
 			#tournament .machine-data .rank,
 			#tournament .machine-data .pts{
 				text-align:center;
+				-webkit-flex:1 0 12%;
+				-ms-flex:1 0 12%;
 				flex:1 0 12%;
 			}		
 
@@ -291,11 +299,15 @@ body {
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
+				-webkit-flex:2 1 43%;
+				-ms-flex:2 1 43%;
 				flex:2 1 43%;
 			}
 
 			#tournament .machine-data .score{
 				text-align:right;
+				-webkit-flex:2 0 45%;
+				-ms-flex:2 0 45%;
 				flex:2 0 45%;
 			}
 
@@ -314,7 +326,7 @@ body {
 	    	-webkit-transition: all .5s ease-in-out;
 	    	-moz-transition: all .5s ease-in-out;
 	    	transition: all .5s ease-in-out;
-        	transition-property: background, transform, box-shadow, color;
+        	transition-property: background, transform, -webkit-transform, box-shadow, color;
 		}
 			#tournament .machine-data .list li.odd{
 				background-color:rgb(249,249,249);
@@ -579,11 +591,15 @@ body {
 		}
 	
 	#content-wrapper.screen .machines{
+		display:-webkit-flex;
+		display:-ms-flex;
 		display:flex;
 		margin:0 5px;
 	}
 	
 		#content-wrapper.screen .machines .machine{
+			-webkit-flex:1;
+			-ms-flex:1;
 			flex:1;
 			margin:5px;
 		}
