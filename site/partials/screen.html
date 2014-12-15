@@ -40,6 +40,7 @@
 								ng-repeat="score in machine.scores track by score.player_id"
 								ng-style="{
 									'transform': 'translate(0px,' + (score.order * 36) + 'px)', 
+									'-webkit-transform': 'translate(0px,' + (score.order * 36) + 'px)', 
 									'z-index': machine.scores.length - score.order
 								}" 
 								ng-class="{
@@ -97,6 +98,7 @@
 								ng-repeat="score in current_tournament.totals.scores track by score.player_id"
 								ng-style="{
 									'transform': 'translate(0px,' + (score.order * 36) + 'px)', 
+									'-webkit-transform': 'translate(0px,' + (score.order * 36) + 'px)', 
 									'z-index': current_tournament.totals.scores.length - score.order
 								}" 
 								ng-class="{
